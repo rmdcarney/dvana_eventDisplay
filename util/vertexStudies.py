@@ -66,8 +66,10 @@ def compare1D(dist1, dist2):
 	canvas.Draw()
 	canvas.cd()
 
-	hist1.Rebin(5)
-	hist2.Rebin(5)
+
+	if "ntrks" not in dist1 : 
+		hist1.Rebin(2)
+		hist2.Rebin(2)
 
 	# draw histos 
 	maximum = max(hist1.GetMaximum(),hist2.GetMaximum())
@@ -597,11 +599,11 @@ setStyle()
 #print2D("data_Looseunmatched_failaccep_eta_phi")
 #print2D("data_Looseunmatched_passaccep_eta_phi")
 
-compare1D("MC_unmatched_recodv_Rxy"		,"MC_truthmatched_recodv_Rxy")
-compare1D("MC_unmatched_recodv_R"		,"MC_truthmatched_recodv_R")
-compare1D("MC_unmatched_recodv_m"		,"MC_truthmatched_recodv_m")
-compare1D("MC_unmatched_recodv_mbig"	,"MC_truthmatched_recodv_mbig")
-compare1D("MC_unmatched_recodv_ntrks"	,"MC_truthmatched_recodv_ntrks")
-compare1D("MC_unmatched_recodv_ntrksbig","MC_truthmatched_recodv_ntrksbig")
+compare1D("MC_truthmatched_recodv_Rxy" 			, "MC_unmatched_recodv_Rxy"			)
+compare1D("MC_truthmatched_recodv_R" 			, "MC_unmatched_recodv_R"			)
+compare1D("MC_truthmatched_recodv_m" 			, "MC_unmatched_recodv_m"			)
+compare1D("MC_truthmatched_recodv_mbig" 		, "MC_unmatched_recodv_mbig"		)
+compare1D("MC_truthmatched_recodv_ntrks" 		, "MC_unmatched_recodv_ntrks"		)
+compare1D("MC_truthmatched_recodv_ntrksbig" 	, "MC_unmatched_recodv_ntrksbig"	)
 
 #printHowWeDid()

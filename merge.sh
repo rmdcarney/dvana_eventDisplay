@@ -1,2 +1,2 @@
 rm histograms.root
-hadd histograms.root output/*
+hadd histograms.root output/*.root

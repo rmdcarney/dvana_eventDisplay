@@ -225,33 +225,32 @@ public :
    //std::vector<float>   *muDV_muIndex; 
    //std::vector<float>   *muDV_z0wrtSV; 
 
-   //std::vector<int>    *idTrack_NPix_DeadSens; 
-   //std::vector<int>    *idTrack_NPix_Hits; 
-   //std::vector<int>    *idTrack_NPix_Holes; 
-   //std::vector<int>    *idTrack_NPix_ShrHits; 
-   //std::vector<int>    *idTrack_NSct_DeadSens; 
-   //std::vector<int>    *idTrack_NSct_Hits; 
-   //std::vector<int>    *idTrack_NSct_Holes; 
-   //std::vector<int>    *idTrack_NSct_ShrHits; 
-   //std::vector<int>    *idTrack_NTrt_Hits; 
-   //std::vector<int>    *idTrack_NTrt_Outliers; 
-   //std::vector<float>    *idTrack_RadFirstHit; 
-   //std::vector<float>    *idTrack_charge; 
-   //std::vector<float>    *idTrack_chi2; 
-   //std::vector<int>    *idTrack_cosTag; 
-   //std::vector<float>    *idTrack_d0; 
-   //std::vector<double>    *idTrack_errPt; 
-   //std::vector<double>    *idTrack_errd0; 
-   //std::vector<double>    *idTrack_errz0; 
-   //std::vector<double>    *idTrack_eta; 
-   //std::vector<unsigned long>    *idTrack_index; 
-   //std::vector<int>    *idTrack_isLRT; 
-   //std::vector<double>    *idTrack_phi; 
-   //std::vector<double>    *idTrack_pt; 
-   //std::vector<float>    *idTrack_theta; 
-   //std::vector<float>    *idTrack_z0; 
-   //std::vector<float>    *idTrack_z0WrtPV; 
-
+   std::vector<int>    *idTrack_NPix_DeadSens; 
+   std::vector<int>    *idTrack_NPix_Hits; 
+   std::vector<int>    *idTrack_NPix_Holes; 
+   std::vector<int>    *idTrack_NPix_ShrHits; 
+   std::vector<int>    *idTrack_NSct_DeadSens; 
+   std::vector<int>    *idTrack_NSct_Hits; 
+   std::vector<int>    *idTrack_NSct_Holes; 
+   std::vector<int>    *idTrack_NSct_ShrHits; 
+   std::vector<int>    *idTrack_NTrt_Hits; 
+   std::vector<int>    *idTrack_NTrt_Outliers; 
+   std::vector<float>    *idTrack_RadFirstHit; 
+   std::vector<float>    *idTrack_charge; 
+   std::vector<float>    *idTrack_chi2; 
+   std::vector<int>    *idTrack_cosTag; 
+   std::vector<float>    *idTrack_d0; 
+   std::vector<double>    *idTrack_errPt; 
+   std::vector<double>    *idTrack_errd0; 
+   std::vector<double>    *idTrack_errz0; 
+   std::vector<double>    *idTrack_eta; 
+   std::vector<unsigned long>    *idTrack_index; 
+   std::vector<int>    *idTrack_isLRT; 
+   std::vector<double>    *idTrack_phi; 
+   std::vector<double>    *idTrack_pt; 
+   std::vector<float>    *idTrack_theta; 
+   std::vector<float>    *idTrack_z0; 
+   std::vector<float>    *idTrack_z0WrtPV; 
 
    std::vector<double>       *truthSparticle_BetaGamma ; 
    std::vector<double>       *truthSparticle_Charge ; 
@@ -275,12 +274,19 @@ public :
    std::vector<double>       *truthTrack_Charge ; 
    std::vector<double>       *truthTrack_Eta ; 
    std::vector<int>          *truthTrack_Parent ; 
+   std::vector<int>          *truthTrack_ParentStatus;
    std::vector<int>          *truthTrack_PdgId ; 
    std::vector<double>       *truthTrack_Phi ; 
    std::vector<double>       *truthTrack_Pt ; 
    std::vector<int>          *truthTrack_Status ; 
    std::vector<double>       *truthTrack_d0 ; 
 
+
+   std::vector<double> *truthParticle_Charge;
+   std::vector<double> *truthParticle_Eta;
+   std::vector<double> *truthParticle_PdgId;
+   std::vector<double> *truthParticle_Phi;
+   std::vector<double> *truthParticle_Pt;
 
    // List of branches
    TBranch        *b_passMETtrigger; //!
@@ -474,32 +480,32 @@ public :
    //TBranch        *b_muDV_muIndex; //! 
    //TBranch        *b_muDV_z0wrtSV; //!
 
-   //TBranch    *b_idTrack_NPix_DeadSens; //! 
-   //TBranch    *b_idTrack_NPix_Hits; //! 
-   //TBranch    *b_idTrack_NPix_Holes; //! 
-   //TBranch    *b_idTrack_NPix_ShrHits; //! 
-   //TBranch    *b_idTrack_NSct_DeadSens; //! 
-   //TBranch    *b_idTrack_NSct_Hits; //! 
-   //TBranch    *b_idTrack_NSct_Holes; //! 
-   //TBranch    *b_idTrack_NSct_ShrHits; //! 
-   //TBranch    *b_idTrack_NTrt_Hits; //! 
-   //TBranch    *b_idTrack_NTrt_Outliers; //! 
-   //TBranch    *b_idTrack_RadFirstHit; //! 
-   //TBranch    *b_idTrack_charge; //! 
-   //TBranch    *b_idTrack_chi2; //! 
-   //TBranch    *b_idTrack_cosTag; //! 
-   //TBranch    *b_idTrack_d0; //! 
-   //TBranch    *b_idTrack_errPt; //! 
-   //TBranch    *b_idTrack_errd0; //! 
-   //TBranch    *b_idTrack_errz0; //! 
-   //TBranch    *b_idTrack_eta; //! 
-   //TBranch    *b_idTrack_index; //! 
-   //TBranch    *b_idTrack_isLRT; //! 
-   //TBranch    *b_idTrack_phi; //! 
-   //TBranch    *b_idTrack_pt; //! 
-   //TBranch    *b_idTrack_theta; //! 
-   //TBranch    *b_idTrack_z0; //! 
-   //TBranch    *b_idTrack_z0WrtPV; //! 
+   TBranch    *b_idTrack_NPix_DeadSens; //! 
+   TBranch    *b_idTrack_NPix_Hits; //! 
+   TBranch    *b_idTrack_NPix_Holes; //! 
+   TBranch    *b_idTrack_NPix_ShrHits; //! 
+   TBranch    *b_idTrack_NSct_DeadSens; //! 
+   TBranch    *b_idTrack_NSct_Hits; //! 
+   TBranch    *b_idTrack_NSct_Holes; //! 
+   TBranch    *b_idTrack_NSct_ShrHits; //! 
+   TBranch    *b_idTrack_NTrt_Hits; //! 
+   TBranch    *b_idTrack_NTrt_Outliers; //! 
+   TBranch    *b_idTrack_RadFirstHit; //! 
+   TBranch    *b_idTrack_charge; //! 
+   TBranch    *b_idTrack_chi2; //! 
+   TBranch    *b_idTrack_cosTag; //! 
+   TBranch    *b_idTrack_d0; //! 
+   TBranch    *b_idTrack_errPt; //! 
+   TBranch    *b_idTrack_errd0; //! 
+   TBranch    *b_idTrack_errz0; //! 
+   TBranch    *b_idTrack_eta; //! 
+   TBranch    *b_idTrack_index; //! 
+   TBranch    *b_idTrack_isLRT; //! 
+   TBranch    *b_idTrack_phi; //! 
+   TBranch    *b_idTrack_pt; //! 
+   TBranch    *b_idTrack_theta; //! 
+   TBranch    *b_idTrack_z0; //! 
+   TBranch    *b_idTrack_z0WrtPV; //! 
 
    TBranch *b_truthSparticle_BetaGamma ; //! 
    TBranch *b_truthSparticle_Charge ; //! 
@@ -523,12 +529,19 @@ public :
    TBranch *b_truthTrack_Charge ; //! 
    TBranch *b_truthTrack_Eta ; //! 
    TBranch *b_truthTrack_Parent ; //! 
+   TBranch *b_truthTrack_ParentStatus ; //!
    TBranch *b_truthTrack_PdgId ; //! 
    TBranch *b_truthTrack_Phi ; //! 
    TBranch *b_truthTrack_Pt ; //! 
    TBranch *b_truthTrack_Status ; //! 
    TBranch *b_truthTrack_d0 ; //! 
-             
+        
+
+   TBranch *b_truthParticle_Charge; //
+   TBranch *b_truthParticle_Eta; //
+   TBranch *b_truthParticle_PdgId; //
+   TBranch *b_truthParticle_Phi; //
+   TBranch *b_truthParticle_Pt; //     
 
    doHistos(TTree *tree=0,bool isMC=1);
    virtual ~doHistos();
@@ -551,6 +564,7 @@ public :
    //virtual void     makeCutflow(std::string s_sample, std::vector<Muon> mus, std::vector<DV> dvs, float evt_wght);
    virtual float    Z_mass();
    virtual bool     passZmumu();
+   virtual int      getNcharge(float pt, float eta, float phi, float m, float dR); 
 
 
 };
@@ -666,6 +680,7 @@ void doHistos::Init(TTree *tree,bool isMC)
    jet_Eta = 0;
    jet_Phi = 0;
    jet_Pt = 0;
+
    mstrack_D0 = 0;
    mstrack_ELoss = 0;
    mstrack_ELossSigma = 0;
@@ -764,32 +779,32 @@ void doHistos::Init(TTree *tree,bool isMC)
    //muDV_muIndex = 0; 
    //muDV_z0wrtSV = 0;
 
-   //idTrack_NPix_DeadSens = 0;  
-   //idTrack_NPix_Hits = 0;  
-   //idTrack_NPix_Holes = 0;  
-   //idTrack_NPix_ShrHits = 0;  
-   //idTrack_NSct_DeadSens = 0;  
-   //idTrack_NSct_Hits = 0;  
-   //idTrack_NSct_Holes = 0;  
-   //idTrack_NSct_ShrHits = 0;  
-   //idTrack_NTrt_Hits = 0;  
-   //idTrack_NTrt_Outliers = 0;  
-   //idTrack_RadFirstHit = 0;  
-   //idTrack_charge = 0;  
-   //idTrack_chi2 = 0;  
-   //idTrack_cosTag = 0;  
-   //idTrack_d0 = 0;  
-   //idTrack_errPt = 0;  
-   //idTrack_errd0 = 0;  
-   //idTrack_errz0 = 0;  
-   //idTrack_eta = 0;  
-   //idTrack_index = 0;  
-   //idTrack_isLRT = 0;  
-   //idTrack_phi = 0;  
-   //idTrack_pt = 0;  
-   //idTrack_theta = 0;  
-   //idTrack_z0 = 0;  
-   //idTrack_z0WrtPV = 0;   
+   idTrack_NPix_DeadSens = 0;  
+   idTrack_NPix_Hits = 0;  
+   idTrack_NPix_Holes = 0;  
+   idTrack_NPix_ShrHits = 0;  
+   idTrack_NSct_DeadSens = 0;  
+   idTrack_NSct_Hits = 0;  
+   idTrack_NSct_Holes = 0;  
+   idTrack_NSct_ShrHits = 0;  
+   idTrack_NTrt_Hits = 0;  
+   idTrack_NTrt_Outliers = 0;  
+   idTrack_RadFirstHit = 0;  
+   idTrack_charge = 0;  
+   idTrack_chi2 = 0;  
+   idTrack_cosTag = 0;  
+   idTrack_d0 = 0;  
+   idTrack_errPt = 0;  
+   idTrack_errd0 = 0;  
+   idTrack_errz0 = 0;  
+   idTrack_eta = 0;  
+   idTrack_index = 0;  
+   idTrack_isLRT = 0;  
+   idTrack_phi = 0;  
+   idTrack_pt = 0;  
+   idTrack_theta = 0;  
+   idTrack_z0 = 0;  
+   idTrack_z0WrtPV = 0;   
 
    if (isMC){
    truthSparticle_BetaGamma = 0 ; 
@@ -814,11 +829,18 @@ void doHistos::Init(TTree *tree,bool isMC)
    truthTrack_Charge = 0 ; 
    truthTrack_Eta = 0 ; 
    truthTrack_Parent = 0 ; 
+   truthTrack_ParentStatus = 0 ;
    truthTrack_PdgId = 0 ; 
    truthTrack_Phi = 0 ; 
    truthTrack_Pt = 0 ; 
    truthTrack_Status = 0 ; 
    truthTrack_d0 = 0 ; 
+
+   truthParticle_Charge = 0;
+   truthParticle_Eta = 0;
+   truthParticle_PdgId = 0;
+   truthParticle_Phi = 0;
+   truthParticle_Pt = 0;    
  
    }
                 
@@ -918,11 +940,11 @@ void doHistos::Init(TTree *tree,bool isMC)
    fChain->SetBranchAddress("track_NTrtHits", &track_NTrtHits, &b_track_NTrtHits); 
    fChain->SetBranchAddress("track_NTrtOutliers", &track_NTrtOutliers, &b_track_NTrtOutliers); 
 
-   //fChain->SetBranchAddress("jet_BTag", &jet_BTag, &b_jet_BTag);
-   //fChain->SetBranchAddress("jet_M", &jet_M, &b_jet_M);
-   //fChain->SetBranchAddress("jet_Eta ", &jet_Eta, &b_jet_Eta);
-   //fChain->SetBranchAddress("jet_Phi ", &jet_Phi, &b_jet_Phi);
-   //fChain->SetBranchAddress("jet_P", &jet_Pt, &b_jet_Pt);
+   fChain->SetBranchAddress("jet_Eta", &jet_Eta, &b_jet_Eta);
+   fChain->SetBranchAddress("jet_Phi", &jet_Phi, &b_jet_Phi);
+   fChain->SetBranchAddress("jet_BTag", &jet_BTag, &b_jet_BTag);
+   fChain->SetBranchAddress("jet_M", &jet_M, &b_jet_M);
+   fChain->SetBranchAddress("jet_Pt", &jet_Pt, &b_jet_Pt);
 
    fChain->SetBranchAddress("mstrack_D0", &mstrack_D0, &b_mstrack_D0);
    fChain->SetBranchAddress("mstrack_ELoss", &mstrack_ELoss, &b_mstrack_ELoss);
@@ -1021,32 +1043,32 @@ void doHistos::Init(TTree *tree,bool isMC)
    //fChain->SetBranchAddress("muDV_muIndex", &muDV_muIndex, &b_muDV_muIndex); 
    //fChain->SetBranchAddress("muDV_z0wrtSV", &muDV_z0wrtSV, &b_muDV_z0wrtSV);
 
-   //fChain->SetBranchAddress("idTrack_NPix_DeadSens", &idTrack_NPix_DeadSens, &b_idTrack_NPix_DeadSens);   
-   //fChain->SetBranchAddress("idTrack_NPix_Hits", &idTrack_NPix_Hits, &b_idTrack_NPix_Hits);   
-   //fChain->SetBranchAddress("idTrack_NPix_Holes", &idTrack_NPix_Holes, &b_idTrack_NPix_Holes);   
-   //fChain->SetBranchAddress("idTrack_NPix_ShrHits", &idTrack_NPix_ShrHits, &b_idTrack_NPix_ShrHits);   
-   //fChain->SetBranchAddress("idTrack_NSct_DeadSens", &idTrack_NSct_DeadSens, &b_idTrack_NSct_DeadSens);   
-   //fChain->SetBranchAddress("idTrack_NSct_Hits", &idTrack_NSct_Hits, &b_idTrack_NSct_Hits);   
-   //fChain->SetBranchAddress("idTrack_NSct_Holes", &idTrack_NSct_Holes, &b_idTrack_NSct_Holes);   
-   //fChain->SetBranchAddress("idTrack_NSct_ShrHits", &idTrack_NSct_ShrHits, &b_idTrack_NSct_ShrHits);   
-   //fChain->SetBranchAddress("idTrack_NTrt_Hits", &idTrack_NTrt_Hits, &b_idTrack_NTrt_Hits);   
-   //fChain->SetBranchAddress("idTrack_NTrt_Outliers", &idTrack_NTrt_Outliers, &b_idTrack_NTrt_Outliers);   
-   //fChain->SetBranchAddress("idTrack_RadFirstHit", &idTrack_RadFirstHit, &b_idTrack_RadFirstHit);   
-   //fChain->SetBranchAddress("idTrack_charge", &idTrack_charge, &b_idTrack_charge);   
-   //fChain->SetBranchAddress("idTrack_chi2", &idTrack_chi2, &b_idTrack_chi2);   
-   //fChain->SetBranchAddress("idTrack_cosTag", &idTrack_cosTag, &b_idTrack_cosTag);   
-   //fChain->SetBranchAddress("idTrack_d0", &idTrack_d0, &b_idTrack_d0);   
-   //fChain->SetBranchAddress("idTrack_errPt", &idTrack_errPt, &b_idTrack_errPt);   
-   //fChain->SetBranchAddress("idTrack_errd0", &idTrack_errd0, &b_idTrack_errd0);   
-   //fChain->SetBranchAddress("idTrack_errz0", &idTrack_errz0, &b_idTrack_errz0);   
-   //fChain->SetBranchAddress("idTrack_eta", &idTrack_eta, &b_idTrack_eta);   
-   //fChain->SetBranchAddress("idTrack_index", &idTrack_index, &b_idTrack_index);   
-   //fChain->SetBranchAddress("idTrack_isLRT", &idTrack_isLRT, &b_idTrack_isLRT);   
-   //fChain->SetBranchAddress("idTrack_phi", &idTrack_phi, &b_idTrack_phi);   
-   //fChain->SetBranchAddress("idTrack_pt", &idTrack_pt, &b_idTrack_pt);   
-   //fChain->SetBranchAddress("idTrack_theta", &idTrack_theta, &b_idTrack_theta);   
-   //fChain->SetBranchAddress("idTrack_z0", &idTrack_z0, &b_idTrack_z0);   
-   //fChain->SetBranchAddress("idTrack_z0WrtPV", &idTrack_z0WrtPV, &b_idTrack_z0WrtPV);    
+   fChain->SetBranchAddress("idTrack_NPix_DeadSens", &idTrack_NPix_DeadSens, &b_idTrack_NPix_DeadSens);   
+   fChain->SetBranchAddress("idTrack_NPix_Hits", &idTrack_NPix_Hits, &b_idTrack_NPix_Hits);   
+   fChain->SetBranchAddress("idTrack_NPix_Holes", &idTrack_NPix_Holes, &b_idTrack_NPix_Holes);   
+   fChain->SetBranchAddress("idTrack_NPix_ShrHits", &idTrack_NPix_ShrHits, &b_idTrack_NPix_ShrHits);   
+   fChain->SetBranchAddress("idTrack_NSct_DeadSens", &idTrack_NSct_DeadSens, &b_idTrack_NSct_DeadSens);   
+   fChain->SetBranchAddress("idTrack_NSct_Hits", &idTrack_NSct_Hits, &b_idTrack_NSct_Hits);   
+   fChain->SetBranchAddress("idTrack_NSct_Holes", &idTrack_NSct_Holes, &b_idTrack_NSct_Holes);   
+   fChain->SetBranchAddress("idTrack_NSct_ShrHits", &idTrack_NSct_ShrHits, &b_idTrack_NSct_ShrHits);   
+   fChain->SetBranchAddress("idTrack_NTrt_Hits", &idTrack_NTrt_Hits, &b_idTrack_NTrt_Hits);   
+   fChain->SetBranchAddress("idTrack_NTrt_Outliers", &idTrack_NTrt_Outliers, &b_idTrack_NTrt_Outliers);   
+   fChain->SetBranchAddress("idTrack_RadFirstHit", &idTrack_RadFirstHit, &b_idTrack_RadFirstHit);   
+   fChain->SetBranchAddress("idTrack_charge", &idTrack_charge, &b_idTrack_charge);   
+   fChain->SetBranchAddress("idTrack_chi2", &idTrack_chi2, &b_idTrack_chi2);   
+   fChain->SetBranchAddress("idTrack_cosTag", &idTrack_cosTag, &b_idTrack_cosTag);   
+   fChain->SetBranchAddress("idTrack_d0", &idTrack_d0, &b_idTrack_d0);   
+   fChain->SetBranchAddress("idTrack_errPt", &idTrack_errPt, &b_idTrack_errPt);   
+   fChain->SetBranchAddress("idTrack_errd0", &idTrack_errd0, &b_idTrack_errd0);   
+   fChain->SetBranchAddress("idTrack_errz0", &idTrack_errz0, &b_idTrack_errz0);   
+   fChain->SetBranchAddress("idTrack_eta", &idTrack_eta, &b_idTrack_eta);   
+   fChain->SetBranchAddress("idTrack_index", &idTrack_index, &b_idTrack_index);   
+   fChain->SetBranchAddress("idTrack_isLRT", &idTrack_isLRT, &b_idTrack_isLRT);   
+   fChain->SetBranchAddress("idTrack_phi", &idTrack_phi, &b_idTrack_phi);   
+   fChain->SetBranchAddress("idTrack_pt", &idTrack_pt, &b_idTrack_pt);   
+   fChain->SetBranchAddress("idTrack_theta", &idTrack_theta, &b_idTrack_theta);   
+   fChain->SetBranchAddress("idTrack_z0", &idTrack_z0, &b_idTrack_z0);   
+   fChain->SetBranchAddress("idTrack_z0WrtPV", &idTrack_z0WrtPV, &b_idTrack_z0WrtPV);    
 
    if (isMC){
       fChain->SetBranchAddress("track_truthMatchProb", &track_truthMatchProb, &b_track_truthMatchProb);
@@ -1076,11 +1098,18 @@ void doHistos::Init(TTree *tree,bool isMC)
       fChain->SetBranchAddress("truthTrack_Charge" ,&truthTrack_Charge, &b_truthTrack_Charge) ; 
       fChain->SetBranchAddress("truthTrack_Eta" ,&truthTrack_Eta, &b_truthTrack_Eta) ; 
       fChain->SetBranchAddress("truthTrack_Parent" ,&truthTrack_Parent, &b_truthTrack_Parent) ; 
+      fChain->SetBranchAddress("truthTrack_ParentStatus", &truthTrack_ParentStatus, &b_truthTrack_ParentStatus);
       fChain->SetBranchAddress("truthTrack_PdgId" ,&truthTrack_PdgId, &b_truthTrack_PdgId) ; 
       fChain->SetBranchAddress("truthTrack_Phi" ,&truthTrack_Phi, &b_truthTrack_Phi) ; 
       fChain->SetBranchAddress("truthTrack_Pt" ,&truthTrack_Pt, &b_truthTrack_Pt) ; 
       fChain->SetBranchAddress("truthTrack_Status" ,&truthTrack_Status, &b_truthTrack_Status) ; 
       fChain->SetBranchAddress("truthTrack_d0" ,&truthTrack_d0, &b_truthTrack_d0) ; 
+
+      //fChain->SetBranchAddress("truthParticle_Charge", &truthParticle_Charge, &b_truthParticle_Charge );
+      //fChain->SetBranchAddress("truthParticle_Eta", &truthParticle_Eta, &b_truthParticle_Eta );
+      //fChain->SetBranchAddress("truthParticle_PdgId", &truthParticle_PdgId, &b_truthParticle_PdgId );
+      //fChain->SetBranchAddress("truthParticle_Phi", &truthParticle_Phi, &b_truthParticle_Phi );
+      //fChain->SetBranchAddress("truthParticle_Pt", &truthParticle_Pt, &b_truthParticle_Pt );
    }
 
    Notify();

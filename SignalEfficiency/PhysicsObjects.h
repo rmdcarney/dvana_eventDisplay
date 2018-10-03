@@ -109,6 +109,14 @@ struct MSTrack {
   float nPresGood;
   float weight;
 };
+struct Jet {
+   float m;
+   float eta;
+   float phi;
+   float pt;
+   float nch_02;
+   float nch_04;
+};
 struct DV {
   unsigned int index;
   TLorentzVector p4; 
@@ -222,12 +230,13 @@ struct TruthMuon {
   float prod_X;
   float prod_Y;
   float prod_Z;
+  float pstatus;
   float parent;
   float charge;
   float weight;
 
   bool isLeading;   // is leading truth muon in event w/in acceptance (pt > 25, eta, d0)
-  bool isLeadingRH; // is leading muon from single RH 
+  //bool isLeadingRH; // is leading muon from single RH 
   TLorentzVector p4; 
 
   int reco_match;

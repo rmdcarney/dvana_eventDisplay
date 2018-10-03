@@ -362,6 +362,39 @@ int doHistos::getMuonDVLink(std::string sample_name, DV dv, std::vector<Muon> mu
 //	return matched_mu;
 //}
 
+//int doHistos::getNtruth(float pt, float eta, float phi, float m, float dR)
+//{
+//	  fChain->SetBranchAddress("truthParticle_Charge", &truthParticle_Charge, &b_truthParticle_Charge );
+//      fChain->SetBranchAddress("truthParticle_Eta", &truthParticle_Eta, &b_truthParticle_Eta );
+//      fChain->SetBranchAddress("truthParticle_PdgId", &truthParticle_PdgId, &b_truthParticle_PdgId );
+//      fChain->SetBranchAddress("truthParticle_Phi", &truthParticle_Phi, &b_truthParticle_Phi );
+//      fChain->SetBranchAddress("truthParticle_Pt", &truthParticle_Pt, &b_truthParticle_Pt );
+//}
+int doHistos::getNcharge(float pt, float eta, float phi, float m, float dR)
+{
+	int nCh = 0;
+	TLorentzVector j4; 
+	j4.SetPtEtaPhiM(pt, eta, phi, m);
+	TLorentzVector p4; 
+	TLorentzVector sum_p4;
+	for (unsigned int trk=0; trk<idTrack_NSct_Holes->size(); trk++)
+	{
+		TLorentzVector p4; 
+		p4.SetPtEtaPhiM(idTrack_pt->at(trk), idTrack_eta->at(trk), idTrack_phi->at(trk), m_pion);
+		
+		if ( p4.DeltaR(j4) < dR ) { nCh++;
+
+			plotter.Plot2D(Form("jetPt_trackPt_dR%i", int(dR*10) ),";jet Pt;track pT;" , pt, idTrack_pt->at(trk) ,100, 0, 1500 , 100, 0, 500 );
+			sum_p4 += p4;
+
+		}
+	}
+
+	plotter.Plot2D(Form("jetPt_SumtrackPt_dR%i", int(dR*10) ),";jet Pt;sum track pT;" , pt, sum_p4.Pt() ,100, 0, 1500 , 100, 0, 1500 );
+
+	return nCh;
+}
+
 void doHistos::Loop(std::string s_sample)
 {
 	//////////////////////////////////////////////////////
@@ -576,7 +609,11 @@ void doHistos::Loop(std::string s_sample)
 			if (debug) std::cout << " muon " << mu << " : pt  " << muon.pt  << " : eta " << muon.eta << " : phi " << muon.phi << " : d0 " << muon.d0 << std::endl;
   			
   			// find leading muons
-  			if (muon.passPreSel && muon.pt > max_pt) lead_mu = mu;
+  			if (muon.passPreSel && muon.pt > max_pt) 
+  			{	
+  				lead_mu = mu;
+  				max_pt = muon.pt;
+  			}
 		}
 		// save leading muon
 		for (int i = 0; i<muons.size(); i++ )
@@ -681,6 +718,28 @@ void doHistos::Loop(std::string s_sample)
 		//	
 		//}
 
+		// some jet studies to figure out if r-hadron samples have a bug
+		//std::cout << "jets" << std::endl;
+		for (unsigned int jet = 0; jet<jet_M->size(); jet++ )
+		{
+   			//float m 	= jet_M->at(jet);
+   			//float eta 	= jet_Eta->at(jet);
+   			//float phi 	= jet_Phi->at(jet);
+   			//float pt 	= jet_Pt->at(jet);
+   			//std::cout << jet << " getting id tracks" << std::endl;
+
+   			float nch_02 = getNcharge(jet_Pt->at(jet), jet_Eta->at(jet), jet_Phi->at(jet), jet_M->at(jet), 0.2);
+   			float nch_04 = getNcharge(jet_Pt->at(jet), jet_Eta->at(jet), jet_Phi->at(jet), jet_M->at(jet), 0.4);
+
+   			//std::cout << jet << " got id tracks" << std::endl;
+
+   			plotter.Plot1D(Form("jet_nCh_dR02" ),";N Charged in #DeltaR < 0.2;Jets"   , nch_02  , 101, -0.5, 100 );
+   			plotter.Plot1D(Form("jet_nCh_dR04" ),";N Charged in #DeltaR < 0.4;Jets"   , nch_04  , 101, -0.5, 100 );
+   			plotter.Plot2D(Form("jetPt_jet_nCh_dR02"),";N Charged in #DeltaR < 0.2;Jet pT [GeV];Jets" , nch_02, jet_Pt->at(jet),  101, -0.5, 200.5, 150, 0, 1500) ;
+   			plotter.Plot2D(Form("jetPt_jet_nCh_dR04"),";N Charged in #DeltaR < 0.4;Jet pT [GeV];Jets" , nch_04, jet_Pt->at(jet),  101, -0.5, 200.5, 150, 0, 1500) ; 
+   		}
+
+
 		/*
 		 Packing up Displaced Vertices  
 		*/
@@ -744,14 +803,25 @@ void doHistos::Loop(std::string s_sample)
 
 		if (debug) std::cout << "getting truth vertices" << std::endl;
 
+
+		// only save r-hadrons with status 1
+		// in stop samples only save stops with status 62?? 
+		// only save muons matched to rhadrons of interest ? indexing doesn't seem to be working
+		// std::cout << "event " << jentry << std::endl;
 		std::vector<TruthVertex> truthVertices; truthVertices.clear();
+		std::vector<TruthMuon> truthMuons; truthMuons.clear();
+		float max_truth_pt = 25;
+		int lead_truth_mu = -1; 
 		for (unsigned int vtx = 0; vtx<truthSparticle_Eta->size(); vtx++)
 		{
-			// only save r-hadrons with status 1
-			if (truthSparticle_Status->at(vtx) == 1 && fabs(truthSparticle_PdgId->at(vtx)) < 1000000000)
+			// cross check that this is the R-hadron or Stop we want
+			bool isRhad = 0 ;
+			if (s_sample.find("RHad") != std::string::npos && truthSparticle_Status->at(vtx) == 1 && fabs(truthSparticle_PdgId->at(vtx)) < 1000000000 ) isRhad = 1;
+			if (s_sample.find("Stop") != std::string::npos && truthSparticle_Status->at(vtx) == 62) isRhad = 1;
+			
+			if (isRhad)
 			{
 				TruthVertex truthVertex;
-  				truthVertex.index 		= vtx;
   				truthVertex.pdgId  		= truthSparticle_PdgId->at(vtx); 
   				truthVertex.status 		= truthSparticle_Status->at(vtx); 
 	
@@ -773,49 +843,66 @@ void doHistos::Loop(std::string s_sample)
   				truthVertex.weight = evt_wght;
 	
 				//std::cout << " truth vtx " << vtx << " : m  " << truthVertex.m  << " : nTrks " << truthVertex.nCh1GeVd0 << " : pdg " << truthVertex.pdgId << std::endl;	
+				//std::cout << " truth vtx " << vtx << " : pdgID " << truthSparticle_PdgId->at(vtx) <<  " : status  " << truthVertex.status << std::endl;	
 
   				truthVertices.push_back(truthVertex);
-  				if (debug) std::cout << " truth vtx " << vtx << " : m  " << truthVertex.m  << " : nTrks " << truthVertex.nCh1GeVd0 << " : rxy " << truthVertex.rxy << std::endl;				
+  				//if (debug) std::cout << " truth vtx " << vtx << " : m  " << truthVertex.m  << " : nTrks " << truthVertex.nCh1GeVd0 << " : rxy " << truthVertex.rxy << std::endl;				
+  				std::cout << " truth vtx " << vtx << " : m  " << truthVertex.m  << " : nTrks " << truthVertex.nCh1GeVd0 << " : rxy " << truthVertex.rxy << std::endl;				
 				
+  				// now save truth muons from vertex we're interested in 
+				for (unsigned int trk = 0; trk<truthTrack_Eta->size(); trk++)
+				{
+
+					//std::cout << " trk pdg " << fabs(truthTrack_PdgId->at(trk)) << " parent " <<  truthTrack_Parent->at(trk) <<  " parent status " << truthTrack_ParentStatus->at(trk) << std::endl;
+					//if ( fabs(truthTrack_PdgId->at(trk)) ==  13  && truthTrack_ParentIndex->at(trk)==truthVertex.index) 
+					if ( fabs(truthTrack_PdgId->at(trk)) ==  13  && truthTrack_Parent->at(trk)==truthVertex.pdgId  && truthTrack_ParentStatus->at(trk)==truthVertex.status) 
+					{
+						std::cout << truthTrack_Pt->at(trk) << " " << truthTrack_Parent->at(trk) << " : " << truthTrack_ParentStatus->at(trk) << std::endl;
+						TruthMuon truthMuon;
+		
+   						truthMuon.charge  	= truthTrack_Charge->at(trk) ; 
+   						truthMuon.eta  		= truthTrack_Eta->at(trk) ; 
+   						truthMuon.pstatus  	= truthTrack_ParentStatus->at(trk) ; 
+   						truthMuon.parent  	= truthTrack_Parent->at(trk) ; 
+   						truthMuon.pdgId  	= truthTrack_PdgId->at(trk) ; 
+   						truthMuon.phi  		= truthTrack_Phi->at(trk) ; 
+   						truthMuon.pt  		= truthTrack_Pt->at(trk) ; 
+   						truthMuon.status  	= truthTrack_Status->at(trk) ; 
+   						truthMuon.d0  		= truthTrack_d0->at(trk) ; 
+   						truthMuon.weight 	= evt_wght;
+		
+						TLorentzVector four_vec;
+						four_vec.SetPtEtaPhiM(truthMuon.pt,truthMuon.eta,truthMuon.phi,m_muon);
+						truthMuon.p4	= four_vec; 	
+		
+   						truthMuons.push_back(truthMuon);		
+   						
+   						// find leading muons
+  						if (truthMuon.pt > max_truth_pt && fabs(truthMuon.eta) < 2.5 ) {
+  							lead_truth_mu = trk;
+  							max_truth_pt = truthMuon.pt;
+  						}
+  					
+  						break; // only save 1 muon per stop, should.... be the first muon
+   					//std::cout << " truth muon " << trk << " : pt  " << truthMuon.pt  << " : eta " << truthMuon.eta << " : phi " << truthMuon.phi << std::endl;							
+					}
+
+				}
 
 			}
 		}
-			
-
-
-		std::cout << jentry << std::endl;
-		std::vector<TruthMuon> truthMuons; truthMuons.clear();
-		for (unsigned int trk = 0; trk<truthTrack_Eta->size(); trk++)
+		
+		// save leading muon
+		for (int i = 0; i<truthMuons.size(); i++ )
 		{
-			if ( fabs(truthTrack_PdgId->at(trk)) ==  13  ) 
-			{
-				std::cout << truthTrack_Parent->at(trk) << " : pt " << truthTrack_Pt->at(trk) << std::endl;
-				TruthMuon truthMuon;
-
-   				truthMuon.charge  	= truthTrack_Charge->at(trk) ; 
-   				truthMuon.eta  		= truthTrack_Eta->at(trk) ; 
-   				truthMuon.parent  	= truthTrack_Parent->at(trk) ; 
-   				truthMuon.pdgId  	= truthTrack_PdgId->at(trk) ; 
-   				truthMuon.phi  		= truthTrack_Phi->at(trk) ; 
-   				truthMuon.pt  		= truthTrack_Pt->at(trk) ; 
-   				truthMuon.status  	= truthTrack_Status->at(trk) ; 
-   				truthMuon.d0  		= truthTrack_d0->at(trk) ; 
-   				truthMuon.weight 	= evt_wght;
-
-				TLorentzVector four_vec;
-				four_vec.SetPtEtaPhiM(truthMuon.pt,truthMuon.eta,truthMuon.phi,m_muon);
-				truthMuon.p4	= four_vec; 
-
-				
-
-   				truthMuons.push_back(truthMuon);		
-
-
-
-   				//std::cout << " truth muon " << trk << " : pt  " << truthMuon.pt  << " : eta " << truthMuon.eta << " : phi " << truthMuon.phi << std::endl;							
-			}
-
+			if (i == lead_truth_mu ) (truthMuons.at(i)).isLeading = 1;
+			else 			   		 (truthMuons.at(i)).isLeading = 0;
 		}
+
+
+		
+		
+
 
   		
 
@@ -840,7 +927,7 @@ void doHistos::Loop(std::string s_sample)
   			truth_mu.reco_match = find_matching_reco_muon(muons, truth_mu);
   			//std::cout << "Truth Muon : pt " << truth_mu.pt << " : eta " << truth_mu.eta << " : phi "  << truth_mu.phi << std::endl;
   			
-  			matched_muon_plots(truth_mu, muons);
+  			if (truth_mu.isLeading) matched_muon_plots(truth_mu, muons);
 
   			//pull out matching reco
   			if (truth_mu.reco_match > -1)

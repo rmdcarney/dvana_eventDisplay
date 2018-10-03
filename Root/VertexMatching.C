@@ -21,7 +21,9 @@ float vertex_distance(DV dv, TruthVertex rh)
 }
 bool dv_passSelection(DV dv)
 {
-	if (dv.passFiducialCuts && dv.passChisqCut && dv.passDistCut && dv.passMaterialVeto && dv.passMassCut10 && dv.passNtrackCut3) return true;
+	// ignore material veto for now
+	//if (dv.passFiducialCuts && dv.passChisqCut && dv.passDistCut && dv.passMaterialVeto && dv.passMassCut10 && dv.passNtrackCut3) return true;
+	if (dv.passFiducialCuts && dv.passChisqCut && dv.passDistCut && dv.passMassCut10 && dv.passNtrackCut3) return true;
 	else return false;
 }
 int find_matching_truth_vertex(DV dv, std::vector<TruthVertex> rhadrons)
@@ -90,7 +92,7 @@ void reco_dv_plots(DV reco_dv, std::vector<TruthVertex> truth_vtxs, std::string 
 	// Individual properties 
 	plotter.Plot1D(Form("%s_all_recodv_m" 		, sample.c_str() ),";m [GeV];reco dvs" 		, reco_dv.m 		, 100, 0, 100 		, reco_dv.weight );
 	plotter.Plot1D(Form("%s_all_recodv_mbig" 	, sample.c_str() ),";m [GeV];reco dvs" 		, reco_dv.m 		, 100, 0, 1500 		, reco_dv.weight );
-	plotter.Plot1D(Form("%s_all_recodv_ntrks"  	, sample.c_str() ),";nTracks;reco dvs" 		, reco_dv.nTracks 	, 100, 0, 50 		, reco_dv.weight );
+	plotter.Plot1D(Form("%s_all_recodv_ntrks"  	, sample.c_str() ),";nTracks;reco dvs" 		, reco_dv.nTracks 	, 51, -0.5, 50.5 	, reco_dv.weight );
 	plotter.Plot1D(Form("%s_all_recodv_ntrksbig" , sample.c_str() ),";nTracks;reco dvs" 	, reco_dv.nTracks 	, 100, 0, 1000 		, reco_dv.weight );
 	plotter.Plot1D(Form("%s_all_recodv_R"  		, sample.c_str() ),";R [mm];reco dvs" 		, reco_dv.r 		, 100, 0, 500 		, reco_dv.weight );
 	plotter.Plot1D(Form("%s_all_recodv_Rxy" 	, sample.c_str() ),";Rxy [mm];reco dvs" 	, reco_dv.rxy 		, 100, 0, 300	 	, reco_dv.weight );
@@ -102,7 +104,7 @@ void reco_dv_plots(DV reco_dv, std::vector<TruthVertex> truth_vtxs, std::string 
 	{
 		plotter.Plot1D(Form("%s_truthmatched_recodv_m" 			, sample.c_str() ),";m [GeV];reco dvs" 		, reco_dv.m 		, 100, 0, 100 		, reco_dv.weight );
 		plotter.Plot1D(Form("%s_truthmatched_recodv_mbig" 		, sample.c_str() ),";m [GeV];reco dvs" 		, reco_dv.m 		, 100, 0, 1500 		, reco_dv.weight );
-		plotter.Plot1D(Form("%s_truthmatched_recodv_ntrks"  	, sample.c_str() ),";nTracks;reco dvs" 		, reco_dv.nTracks 	, 100, 0, 50 		, reco_dv.weight );
+		plotter.Plot1D(Form("%s_truthmatched_recodv_ntrks"  	, sample.c_str() ),";nTracks;reco dvs" 		, reco_dv.nTracks 	, 51, -0.5, 50.5 	, reco_dv.weight );
 		plotter.Plot1D(Form("%s_truthmatched_recodv_ntrksbig" 	, sample.c_str() ),";nTracks;reco dvs" 		, reco_dv.nTracks 	, 100, 0, 1000 		, reco_dv.weight );
 		plotter.Plot1D(Form("%s_truthmatched_recodv_R"  		, sample.c_str() ),";R [mm];reco dvs" 		, reco_dv.r 		, 100, 0, 500 		, reco_dv.weight );
 		plotter.Plot1D(Form("%s_truthmatched_recodv_Rxy" 		, sample.c_str() ),";Rxy [mm];reco dvs" 	, reco_dv.rxy 		, 100, 0, 300	 	, reco_dv.weight );
@@ -116,7 +118,7 @@ void reco_dv_plots(DV reco_dv, std::vector<TruthVertex> truth_vtxs, std::string 
 	{
 		plotter.Plot1D(Form("%s_unmatched_recodv_m" 		, sample.c_str() ),";m [GeV];reco dvs" 		, reco_dv.m 		, 100, 0, 100 		, reco_dv.weight );
 		plotter.Plot1D(Form("%s_unmatched_recodv_mbig" 		, sample.c_str() ),";m [GeV];reco dvs" 		, reco_dv.m 		, 100, 0, 1500 		, reco_dv.weight );
-		plotter.Plot1D(Form("%s_unmatched_recodv_ntrks"  	, sample.c_str() ),";nTracks;reco dvs" 		, reco_dv.nTracks 	, 100, 0, 50 		, reco_dv.weight );
+		plotter.Plot1D(Form("%s_unmatched_recodv_ntrks"  	, sample.c_str() ),";nTracks;reco dvs" 		, reco_dv.nTracks 	, 51, -0.5, 50.5 	, reco_dv.weight );
 		plotter.Plot1D(Form("%s_unmatched_recodv_ntrksbig" 	, sample.c_str() ),";nTracks;reco dvs" 		, reco_dv.nTracks 	, 100, 0, 1000 		, reco_dv.weight );
 		plotter.Plot1D(Form("%s_unmatched_recodv_R"  		, sample.c_str() ),";R [mm];reco dvs" 		, reco_dv.r 		, 100, 0, 500 		, reco_dv.weight );
 		plotter.Plot1D(Form("%s_unmatched_recodv_Rxy" 		, sample.c_str() ),";Rxy [mm];reco dvs" 	, reco_dv.rxy 		, 100, 0, 300	 	, reco_dv.weight );
