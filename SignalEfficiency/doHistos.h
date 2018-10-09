@@ -15,6 +15,7 @@
 #include "SignalEfficiency/PlotHelper.h"
 #include "SignalEfficiency/GeometryHelper.h"
 #include "SignalEfficiency/PhysicsObjects.h"
+#include "SignalEfficiency/CutflowHelper.h"
 #include "vector"
 
 
@@ -561,7 +562,7 @@ public :
    //virtual int      getMuonDVMatch(std::string s_sample, DV dv, std::vector<Muon> mus, float evt_wght);
    //virtual void     metEfficiencyStudy(std::string s_sample, std::vector<Muon> muons, float evt_wght);
    //virtual void     metEfficiencyPlots(std::string s_sample, std::string selection, float mu_pt, float mu_eta, float new_met, float evt_wght);
-   //virtual void     makeCutflow(std::string s_sample, std::vector<Muon> mus, std::vector<DV> dvs, float evt_wght);
+   virtual void     makeCutflow(std::string s_sample, std::vector<Muon> mus, std::vector<DV> dvs, float evt_wght);
    virtual float    Z_mass();
    virtual bool     passZmumu();
    virtual int      getNcharge(float pt, float eta, float phi, float m, float dR); 

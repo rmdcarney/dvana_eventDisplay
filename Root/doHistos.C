@@ -1,6 +1,7 @@
 #define doHistos_cxx
 #include "SignalEfficiency/doHistos.h"
 #include "Root/VertexMatching.C"
+#include "Root/MakeCutflow.C"
 #include <TStyle.h>
 #include <TCanvas.h>
 #include <iostream>
@@ -72,6 +73,18 @@ float histWeight(TString sample_name, float event_weight){
 	if (sample_name == "lmdpctau10"  ) {total_sum_weights = 10000; cross_x = 0.677259;  }// pb
 	if (sample_name == "lmdpctau100" ) {total_sum_weights = 10000; cross_x = 0.677259;  }// pb
 	if (sample_name == "lmdpctau1000") {total_sum_weights = 9000 ; cross_x = 0.677259;  }// pb
+
+	// 1000 events, rhadron samples 
+	else if (sample_name.Contains("RHad_1000") ) { total_sum_weights = 1000; cross_x = 0.00615134; } // pb
+	else if (sample_name.Contains("RHad_1100") ) { total_sum_weights = 1000; cross_x = 0.00307413; } // pb
+	else if (sample_name.Contains("RHad_1200") ) { total_sum_weights = 1000; cross_x = 0.00159844; } // pb
+	else if (sample_name.Contains("RHad_1300") ) { total_sum_weights = 1000; cross_x = 0.000850345; } // pb
+	else if (sample_name.Contains("RHad_1400") ) { total_sum_weights = 1000; cross_x = 0.000461944; } // pb
+	else if (sample_name.Contains("RHad_1500") ) { total_sum_weights = 1000; cross_x = 0.000256248; } // pb
+	else if (sample_name.Contains("RHad_1600") ) { total_sum_weights = 1000; cross_x = 0.000141382; } // pb
+	else if (sample_name.Contains("RHad_1700") ) { total_sum_weights = 1000; cross_x = 0.0000807774; } // pb
+	else if (sample_name.Contains("RHad_1800") ) { total_sum_weights = 1000; cross_x = 0.0000467492; } // pb
+	else if (sample_name.Contains("RHad_1900") ) { total_sum_weights = 1000; cross_x = 0.273974; } // pb
 
 
 	else if (sample_name.Contains("Stop_1700") 		 ) { total_sum_weights = 10000; cross_x = 0.0000807774; } // pb
@@ -261,115 +274,8 @@ int doHistos::getMuonDVLink(std::string sample_name, DV dv, std::vector<Muon> mu
 	return linked_mu;
 	
 }
-//int doHistos::getMuonDVMatch(std::string sample_name, DV dv, std::vector<Muon> mus, float weight=1.){
-//	// returns matched muon
-//	int matched_mu = -1;
-//	int linked_mu = -1;
-//	int linked_trk = -1;
-//
-//	float smallest_d0 = 999;
-//	float smallest_z0 = 999; 
-//	float smallest_DOCA = 999;
-//	
-//	for ( unsigned int pair = 0; pair < muDV_d0wrtSV->size(); pair++ ){ // MATCHING TO MUONS PASSING EVENT SELECTION
-//		
-//		if (muDV_dvIndex->at(pair)!=dv.index) continue;
-//
-//		for (auto mu : mus ){
-//
-//			if (muDV_muIndex->at(pair)!=mu.index) continue;
-//
-//			if (mu.passPt25 && mu.passEta2p5 && mu.passID) {
-//				
-//				float doca = DOCA( muDV_d0wrtSV->at(pair),muDV_z0wrtSV->at(pair) );
-//
-//				if ( doca < fabs(smallest_DOCA) ){
-//
-//					smallest_d0 = muDV_d0wrtSV->at(pair);
-//					smallest_z0 = muDV_z0wrtSV->at(pair);
-//					smallest_DOCA = doca;
-//					
-//					if (doca < 0.5) matched_mu = mu.index;
-//
-//					if ( isMuonDVLink(dv,mu) > -1 ) {
-//										
-//						linked_mu = mu.index;
-//						linked_trk = isMuonDVLink(dv,mu);
-//
-//						//std::cout << "linked!" << std::endl;
-//						//std::cout << "Track_d0 wrt DV " << Track_d0WrtDV->at(linked_trk) << std::endl;
-//						//std::cout << "Track_z0 wrt DV " << Track_z0WrtDV->at(linked_trk) << std::endl;
-//						//std::cout << "Muon_d0 wrt DV "  <<  muDV_d0wrtSV->at(pair) << std::endl;
-//						//std::cout << "Muon_z0 wrt DV "  <<  muDV_z0wrtSV->at(pair) << std::endl;
-//						//std::cout << " MU chi2 "   <<  mu.CBchi2 << std::endl;
-//						//std::cout << " DV chi2 "  <<  dv.chi2 << std::endl;
-//
-//						plotter.Plot1D(Form("%s_linkedmu_muDV_diffTrkMuond0"   	,  sample_name.c_str()),";track - #mu (d0 wrt DV) [mm];Linked DV-Muon Pairs"  , Track_d0WrtDV->at(linked_trk) - muDV_d0wrtSV->at(pair) , 200 , -100, 100 );
-//						plotter.Plot1D(Form("%s_linkedmu_muDV_diffTrkMuonz0"   	,  sample_name.c_str()),";track - #mu (z0 wrt DV) [mm];Linked DV-Muon Pairs"  , Track_z0WrtDV->at(linked_trk) - muDV_z0wrtSV->at(pair) , 200 , -100, 100 );
-//						
-//						plotter.Plot2D(Form("%s_linkedmu_muDV_diffTrkMuond0_muDOCA"  ,  sample_name.c_str()),";track - #mu (d0 wrt DV) [mm];Muon DOCA"   		, Track_d0WrtDV->at(linked_trk) - muDV_d0wrtSV->at(pair) , doca , 100 , -100, 100, 50, 0, 100 );
-//						plotter.Plot2D(Form("%s_linkedmu_muDV_diffTrkMuonz0_muDOCA"  ,  sample_name.c_str()),";track - #mu (z0 wrt DV) [mm];Muon DOCA"   		, Track_z0WrtDV->at(linked_trk) - muDV_z0wrtSV->at(pair) , doca , 100 , -100, 100, 50, 0, 100 );
-//						
-//						if (dv.chi2 < 10){
-//							plotter.Plot1D(Form("%s_linkedmugooddv_muDV_mud0wrtDV"   ,  sample_name.c_str()),";Muon d0 to DV [mm];Pairs (dv #chi^{2}/N_{DoF} < 10)"   , muDV_d0wrtSV->at(pair)  	  , 200 , -100, 100 );
-//							plotter.Plot1D(Form("%s_linkedmugooddv_muDV_muz0wrtDV"   ,  sample_name.c_str()),";Muon z0 to DV [mm];Pairs (dv #chi^{2}/N_{DoF} < 10)"   , muDV_z0wrtSV->at(pair) 		  , 200 , -100, 100 );
-//							plotter.Plot1D(Form("%s_linkedmugooddv_muDV_trkd0wrtDV"  ,  sample_name.c_str()),";Track d0 to DV [mm];Pairs (dv #chi^{2}/N_{DoF} < 10)"  , Track_d0WrtDV->at(linked_trk) , 200 , -100, 100 );
-//							plotter.Plot1D(Form("%s_linkedmugooddv_muDV_trkz0wrtDV"  ,  sample_name.c_str()),";Track z0 to DV [mm];Pairs (dv #chi^{2}/N_{DoF} < 10)"  , Track_z0WrtDV->at(linked_trk) , 200 , -100, 100 );
-//						}
-//						else {
-//							plotter.Plot1D(Form("%s_linkedmubaddv_muDV_mud0wrtDV"   ,  sample_name.c_str()),";Muon d0 to DV [mm];Pairs (dv #chi^{2}/N_{DoF} > 10)"   , muDV_d0wrtSV->at(pair)  	  	  , 200 , -100, 100 );
-//							plotter.Plot1D(Form("%s_linkedmubaddv_muDV_muz0wrtDV"   ,  sample_name.c_str()),";Muon z0 to DV [mm];Pairs (dv #chi^{2}/N_{DoF} > 10)"   , muDV_z0wrtSV->at(pair)  	  	  , 200 , -100, 100 );
-//							plotter.Plot1D(Form("%s_linkedmubaddv_muDV_trkd0wrtDV"  ,  sample_name.c_str()),";Track d0 to DV [mm];Pairs (dv #chi^{2}/N_{DoF} > 10)"  , Track_d0WrtDV->at(linked_trk)  , 200 , -100, 100 );
-//							plotter.Plot1D(Form("%s_linkedmubaddv_muDV_trkz0wrtDV"  ,  sample_name.c_str()),";Track z0 to DV [mm];Pairs (dv #chi^{2}/N_{DoF} > 10)"  , Track_z0WrtDV->at(linked_trk)  , 200 , -100, 100 );
-//						}// DV chi2 study
-//
-//					}// if you found a link
-//				}// if you're muon is a signal muon
-//				 
-//			}// muon index check
-//
-//		}// loop over all muons
-//
-//	}// loop over all dv muon pairs...
-//
-//	//if (matched_mu) std::cout << "matched" << std::endl;
-//
-//	if (smallest_z0 < 999 && smallest_d0 < 999){
-//		plotter.Plot1Dlog(Form("%s_all_muDV_closestd0"   ,  sample_name.c_str()),";#mu (d0 wrt DV) [mm];DV-Muon Combinations"   , fabs(smallest_d0)  , 0.0001, 1000 );
-//		plotter.Plot1Dlog(Form("%s_all_muDV_closestz0"   ,  sample_name.c_str()),";#mu (z0 wrt DV) [mm];DV-Muon Combinations"   , fabs(smallest_z0)  , 0.0001, 1000 );
-//		plotter.Plot1Dlog(Form("%s_all_muDV_closestDOCA" ,  sample_name.c_str()),";#mu (DOCA wrt DV) [mm];DV-Muon Combinations" , fabs(smallest_DOCA), 0.0001, 1000 );
-//		
-//		if (linked_mu>-1){
-//			plotter.Plot1Dlog(Form("%s_linkedmu_muDV_closestd0"   ,  sample_name.c_str()),";#mu (d0 wrt DV) [mm];DV-Muon Combinations"   , fabs(smallest_d0)  , 0.0001, 1000 );
-//			plotter.Plot1Dlog(Form("%s_linkedmu_muDV_closestz0"   ,  sample_name.c_str()),";#mu (z0 wrt DV) [mm];DV-Muon Combinations"   , fabs(smallest_z0)  , 0.0001, 1000 );
-//			plotter.Plot1Dlog(Form("%s_linkedmu_muDV_closestDOCA" ,  sample_name.c_str()),";#mu (DOCA wrt DV) [mm];DV-Muon Combinations" , fabs(smallest_DOCA), 0.0001, 1000 );
-//
-//			if (dv.passMassCut5 && dv.passNtrackCut3 && dv.passChisqCut){
-//				plotter.Plot1Dlog(Form("%s_linkedmuSig_muDV_closestd0"   ,  sample_name.c_str()),";#mu (d0 wrt DV) [mm];DV-Muon Combinations"   , fabs(smallest_d0)  , 0.0001, 1000 );
-//				plotter.Plot1Dlog(Form("%s_linkedmuSig_muDV_closestz0"   ,  sample_name.c_str()),";#mu (z0 wrt DV) [mm];DV-Muon Combinations"   , fabs(smallest_z0)  , 0.0001, 1000 );
-//				plotter.Plot1Dlog(Form("%s_linkedmuSig_muDV_closestDOCA" ,  sample_name.c_str()),";#mu (DOCA wrt DV) [mm];DV-Muon Combinations" , fabs(smallest_DOCA), 0.0001, 1000 );
-//			}
-//		}
-//
-//		if (dv.passMassCut5 && dv.passNtrackCut3 && dv.passChisqCut){
-//			plotter.Plot1Dlog(Form("%s_passMass5ntrk3_muDV_closestd0"   ,  sample_name.c_str()),";#mu (d0 wrt DV) [mm];DV-Muon Combinations"   , fabs(smallest_d0)  , 0.0001, 1000 );
-//			plotter.Plot1Dlog(Form("%s_passMass5ntrk3_muDV_closestz0"   ,  sample_name.c_str()),";#mu (z0 wrt DV) [mm];DV-Muon Combinations"   , fabs(smallest_z0)  , 0.0001, 1000 );
-//			plotter.Plot1Dlog(Form("%s_passMass5ntrk3_muDV_closestDOCA" ,  sample_name.c_str()),";#mu (DOCA wrt DV) [mm];DV-Muon Combinations" , fabs(smallest_DOCA), 0.0001, 1000 );
-//		}
-//	}
-//
-//
-//	return matched_mu;
-//}
 
-//int doHistos::getNtruth(float pt, float eta, float phi, float m, float dR)
-//{
-//	  fChain->SetBranchAddress("truthParticle_Charge", &truthParticle_Charge, &b_truthParticle_Charge );
-//      fChain->SetBranchAddress("truthParticle_Eta", &truthParticle_Eta, &b_truthParticle_Eta );
-//      fChain->SetBranchAddress("truthParticle_PdgId", &truthParticle_PdgId, &b_truthParticle_PdgId );
-//      fChain->SetBranchAddress("truthParticle_Phi", &truthParticle_Phi, &b_truthParticle_Phi );
-//      fChain->SetBranchAddress("truthParticle_Pt", &truthParticle_Pt, &b_truthParticle_Pt );
-//}
+
 int doHistos::getNcharge(float pt, float eta, float phi, float m, float dR)
 {
 	int nCh = 0;
@@ -432,11 +338,10 @@ void doHistos::Loop(std::string s_sample)
 		if (debug) std::cout << "getting event weight" << std::endl;
 		float evt_wght;
 		if 	(s_sample=="data")  evt_wght=1.0;    
-		else if (s_sample.find("Stop") != std::string::npos) {
+		else if (s_sample.find("Stop") != std::string::npos || s_sample.find("RHad") != std::string::npos ) {
 				evt_wght = histWeight( s_sample, mcEventWeight ); // Pileup is wrong
 		}
 		else 	evt_wght = histWeight( s_sample, mcEventWeight*pileupWeight ); // is MC
-		
 
 		/*
 		 Get some variables of interest
@@ -847,9 +752,10 @@ void doHistos::Loop(std::string s_sample)
 
   				truthVertices.push_back(truthVertex);
   				//if (debug) std::cout << " truth vtx " << vtx << " : m  " << truthVertex.m  << " : nTrks " << truthVertex.nCh1GeVd0 << " : rxy " << truthVertex.rxy << std::endl;				
-  				std::cout << " truth vtx " << vtx << " : m  " << truthVertex.m  << " : nTrks " << truthVertex.nCh1GeVd0 << " : rxy " << truthVertex.rxy << std::endl;				
+  				//std::cout << " truth vtx " << vtx << " : m  " << truthVertex.m  << " : nTrks " << truthVertex.nCh1GeVd0 << " : rxy " << truthVertex.rxy << std::endl;				
 				
   				// now save truth muons from vertex we're interested in 
+  				int i = 0;
 				for (unsigned int trk = 0; trk<truthTrack_Eta->size(); trk++)
 				{
 
@@ -857,7 +763,8 @@ void doHistos::Loop(std::string s_sample)
 					//if ( fabs(truthTrack_PdgId->at(trk)) ==  13  && truthTrack_ParentIndex->at(trk)==truthVertex.index) 
 					if ( fabs(truthTrack_PdgId->at(trk)) ==  13  && truthTrack_Parent->at(trk)==truthVertex.pdgId  && truthTrack_ParentStatus->at(trk)==truthVertex.status) 
 					{
-						std::cout << truthTrack_Pt->at(trk) << " " << truthTrack_Parent->at(trk) << " : " << truthTrack_ParentStatus->at(trk) << std::endl;
+						i++;
+						//std::cout << truthTrack_Pt->at(trk) << " " << truthTrack_Parent->at(trk) << " : " << truthTrack_ParentStatus->at(trk) << std::endl;
 						TruthMuon truthMuon;
 		
    						truthMuon.charge  	= truthTrack_Charge->at(trk) ; 
@@ -879,7 +786,7 @@ void doHistos::Loop(std::string s_sample)
    						
    						// find leading muons
   						if (truthMuon.pt > max_truth_pt && fabs(truthMuon.eta) < 2.5 ) {
-  							lead_truth_mu = trk;
+  							lead_truth_mu = i;
   							max_truth_pt = truthMuon.pt;
   						}
   					
@@ -892,6 +799,9 @@ void doHistos::Loop(std::string s_sample)
 			}
 		}
 		
+		//.. MAKE CUTFLOWS
+		doHistos::makeCutflow( s_sample, muons, displacedVertices, evt_wght);
+
 		// save leading muon
 		for (int i = 0; i<truthMuons.size(); i++ )
 		{
@@ -916,7 +826,7 @@ void doHistos::Loop(std::string s_sample)
   		{
   			dv.truth_match = find_matching_truth_vertex(dv, truthVertices);
 
-  			if (dv.nTracks>3 && dv.m > 10 && fabs(dv.z) < 300 && dv.rxy < 300 && dv.passDistCut) reco_dv_plots(dv, truthVertices);
+  			if (dv.nTracks>3 && dv.m > 10 && fabs(dv.z) < 300 && dv.rxy < 300 && dv.passDistCut) reco_dv_plots(dv, truthVertices, s_sample);
   			//std::cout << "Reco Vtx " << dv.index << " : m " << dv.m << " : ntrk " << dv.nTracks << " : match " << dv.truth_match << std::endl;
   		}
 
@@ -927,7 +837,7 @@ void doHistos::Loop(std::string s_sample)
   			truth_mu.reco_match = find_matching_reco_muon(muons, truth_mu);
   			//std::cout << "Truth Muon : pt " << truth_mu.pt << " : eta " << truth_mu.eta << " : phi "  << truth_mu.phi << std::endl;
   			
-  			if (truth_mu.isLeading) matched_muon_plots(truth_mu, muons);
+  			if (truth_mu.isLeading) matched_muon_plots(truth_mu, muons, s_sample);
 
   			//pull out matching reco
   			if (truth_mu.reco_match > -1)
@@ -942,11 +852,7 @@ void doHistos::Loop(std::string s_sample)
   			reco_mu.truth_match = find_matching_truth_muon(reco_mu, truthMuons);
   			//std::cout << "Reco Muon : pt " << mu.pt << " : eta " << mu.eta << " : phi "  << mu.phi << std::endl;
   			//pull out matching truth
-  			//if (truth_mu.reco_match > -1)
-  			//{
-  			//	TruthMuon mu = return_truth_muon(reco_mu.truth_match, truthMuons);
-  			//	std::cout << "Reco Muon : pt " << mu.pt << " : eta " << mu.eta << " : phi "  << mu.phi << " : dR " << mu.p4.DeltaR(reco_mu.p4) << std::endl;
-  			//}
+  			
   		}
 
 
