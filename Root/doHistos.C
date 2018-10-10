@@ -2,6 +2,8 @@
 #include "SignalEfficiency/doHistos.h"
 #include "Root/VertexMatching.C"
 #include "Root/MakeCutflow.C"
+#include "Root/MuonPlots.C"
+#include "Root/DVPlots.C"
 #include <TStyle.h>
 #include <TCanvas.h>
 #include <iostream>
@@ -801,6 +803,9 @@ void doHistos::Loop(std::string s_sample)
 		
 		//.. MAKE CUTFLOWS
 		doHistos::makeCutflow( s_sample, muons, displacedVertices, evt_wght);
+		DVPlots  ( s_sample, displacedVertices , "DVs" , evt_wght);
+		muonPlots( s_sample, muons, "muons", evt_wght); 
+		plotter.Plot1D(Form("%s_LHTMET",s_sample.c_str()),";LHT MET [GeV];events", MET_LHT, 200, 0, 2000    );
 
 		// save leading muon
 		for (int i = 0; i<truthMuons.size(); i++ )
@@ -820,13 +825,14 @@ void doHistos::Loop(std::string s_sample)
   		for (auto rh : truthVertices)
   		{
   			rh.reco_match = find_matching_reco_vertex(displacedVertices, rh);
+  			if (rh.rxy > 4 && rh.rxy < 300 && fabs(rh.z) < 300 && rh.nCh1GeVd0 > 2 && rh.mCh1GeVd0 > 10 ) truth_dv_plots(rh, displacedVertices, s_sample);
   			//std::cout << "Truth Vtx " << rh.index << " : m " << rh.m << " : ntrk " << rh.nCh1GeVd0 << " : match " << rh.reco_match << std::endl;
   		}
   		for (auto dv : displacedVertices)
   		{
   			dv.truth_match = find_matching_truth_vertex(dv, truthVertices);
 
-  			if (dv.nTracks>3 && dv.m > 10 && fabs(dv.z) < 300 && dv.rxy < 300 && dv.passDistCut) reco_dv_plots(dv, truthVertices, s_sample);
+  			if (dv.nTracks>2 && dv.m > 10 && fabs(dv.z) < 300 && dv.rxy < 300 && dv.passDistCut) reco_dv_plots(dv, truthVertices, s_sample);
   			//std::cout << "Reco Vtx " << dv.index << " : m " << dv.m << " : ntrk " << dv.nTracks << " : match " << dv.truth_match << std::endl;
   		}
 

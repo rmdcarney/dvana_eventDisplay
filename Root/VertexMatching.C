@@ -102,7 +102,7 @@ void reco_dv_plots(DV reco_dv, std::vector<TruthVertex> truth_vtxs, std::string 
 	{
 		plotter.Plot1D(Form("%s_truthmatched_recodv_m" 			, sample.c_str() ),";m [GeV];reco dvs" 		, reco_dv.m 		, 100, 0, 100 		, reco_dv.weight );
 		plotter.Plot1D(Form("%s_truthmatched_recodv_mbig" 		, sample.c_str() ),";m [GeV];reco dvs" 		, reco_dv.m 		, 100, 0, 1500 		, reco_dv.weight );
-		plotter.Plot1D(Form("%s_truthmatched_recodv_ntrks"  	, sample.c_str() ),";nTracks;reco dvs" 		, reco_dv.nTracks 	, 51, -0.5, 50.5 	, reco_dv.weight );
+		plotter.Plot1D(Form("%s_truthmatched_recodv_ntrks"  	, sample.c_str() ),";nTracks;reco dvs" 		, reco_dv.nTracks 	, 25, -0.5, 24.5 	, reco_dv.weight );
 		plotter.Plot1D(Form("%s_truthmatched_recodv_ntrksbig" 	, sample.c_str() ),";nTracks;reco dvs" 		, reco_dv.nTracks 	, 100, 0, 1000 		, reco_dv.weight );
 		plotter.Plot1D(Form("%s_truthmatched_recodv_R"  		, sample.c_str() ),";R [mm];reco dvs" 		, reco_dv.r 		, 100, 0, 500 		, reco_dv.weight );
 		plotter.Plot1D(Form("%s_truthmatched_recodv_Rxy" 		, sample.c_str() ),";Rxy [mm];reco dvs" 	, reco_dv.rxy 		, 100, 0, 300	 	, reco_dv.weight );
@@ -131,7 +131,51 @@ void reco_dv_plots(DV reco_dv, std::vector<TruthVertex> truth_vtxs, std::string 
 
 	return;
 }
+void truth_dv_plots(TruthVertex truth_dv, std::vector<DV> reco_dvs, std::string sample="MC")
+{
+	// Individual properties 
+	plotter.Plot1D(Form("%s_all_truthdv_m" 			, sample.c_str() ),";m [GeV];truth dvs" 	, truth_dv.mCh1GeVd0 	, 100, 0, 1500 		, truth_dv.weight );
+	plotter.Plot1D(Form("%s_all_truthdv_ntrks"  	, sample.c_str() ),";nTracks;truth dvs" 	, truth_dv.nCh1GeVd0 	, 25, -0.5, 24.5 	, truth_dv.weight );
+	plotter.Plot1D(Form("%s_all_truthdv_R"  		, sample.c_str() ),";R [mm];truth dvs" 		, truth_dv.r 			, 100, 0, 500 		, truth_dv.weight );
+	plotter.Plot1D(Form("%s_all_truthdv_Rxy" 		, sample.c_str() ),";Rxy [mm];truth dvs" 	, truth_dv.rxy 			, 100, 0, 300	 	, truth_dv.weight );
+	plotter.Plot1D(Form("%s_all_truthdv_z"  		, sample.c_str() ),";z [mm];truth dvs" 		, truth_dv.z 			, 100, -300, 300 	, truth_dv.weight );
 
+	// if reco matched
+	if (truth_dv.reco_match > -1 )
+	{
+		plotter.Plot1D(Form("%s_recomatched_truthdv_m" 			, sample.c_str() ),";m [GeV];truth dvs" 	, truth_dv.mCh1GeVd0 	, 100, 0, 1500 		, truth_dv.weight );
+		plotter.Plot1D(Form("%s_recomatched_truthdv_ntrks"  	, sample.c_str() ),";nTracks;truth dvs" 	, truth_dv.nCh1GeVd0 	, 25, -0.5, 24.5 	, truth_dv.weight );
+		plotter.Plot1D(Form("%s_recomatched_truthdv_R"  		, sample.c_str() ),";R [mm];truth dvs" 		, truth_dv.r 			, 100, 0, 500 		, truth_dv.weight );
+		plotter.Plot1D(Form("%s_recomatched_truthdv_Rxy" 		, sample.c_str() ),";Rxy [mm];truth dvs" 	, truth_dv.rxy 			, 100, 0, 300	 	, truth_dv.weight );
+		plotter.Plot1D(Form("%s_recomatched_truthdv_z"  		, sample.c_str() ),";z [mm];truth dvs" 		, truth_dv.z 			, 100, -300, 300 	, truth_dv.weight );
+	
+		DV reco_dv = return_reco_vertex(truth_dv.reco_match, reco_dvs);
+		plotter.Plot2D(Form("%s_recomatched_truthdv_m_recodv_m"			, sample.c_str() ),";m truth [GeV];m reco [GeV];reco matched DVs"	 , truth_dv.mCh1GeVd0, reco_dv.m      , 100, 0, 1500  , 100, 0, 1500  , truth_dv.weight );
+		plotter.Plot2D(Form("%s_recomatched_truthdv_ntrks_recodv_ntrks" , sample.c_str() ),";ntrk truth;ntrk reco;reco matched DVs"      	 , truth_dv.nCh1GeVd0, reco_dv.nTracks, 25, -0.5, 24.5, 25, -0.5, 24.5, truth_dv.weight );
+		plotter.Plot2D(Form("%s_recomatched_mdiff_truthdv_rxy"			, sample.c_str() ),";Rxy [mm];m reco - truth [GeV];reco matched DVs", truth_dv.rxy, reco_dv.m - truth_dv.mCh1GeVd0        , 100, 0, 300, 100, -1500, 1500, truth_dv.weight );
+		plotter.Plot2D(Form("%s_recomatched_ntrkdiff_truthdv_rxy"		, sample.c_str() ),";Rxy [mm];ntrks reco - truth;reco matched DVs"  , truth_dv.rxy, reco_dv.nTracks - truth_dv.nCh1GeVd0  , 100, 0, 300,  49, -24.5, 24.5, truth_dv.weight );
+		plotter.Plot2D(Form("%s_recomatched_ntrkdiff_mdiff"			    , sample.c_str() ),";ntrks reco - truth;m reco - truth [GeV];reco matched DVs"  , reco_dv.nTracks - truth_dv.nCh1GeVd0, reco_dv.m - truth_dv.mCh1GeVd0 , 49, -24.5, 24.5, 100, -1500, 1500, truth_dv.weight );
+		//Muon reco_mu = return_reco_muon(truth_mu.reco_match, reco_mus);
+		//plotter.Plot1D(Form("%s_recoMatched_muon_dR"  , sample.c_str() ),";#DeltaR(reco,truth);matched muons" 	, truth_mu.p4.DeltaR(reco_mu.p4) , 100, 0, 0.1, truth_mu.weight );
+	} 
+	else
+	{
+		plotter.Plot1D(Form("%s_unmatched_truthdv_m" 		, sample.c_str() ),";m [GeV];truth dvs" 	, truth_dv.mCh1GeVd0 	, 100, 0, 1500 		, truth_dv.weight );
+		plotter.Plot1D(Form("%s_unmatched_truthdv_ntrks"  	, sample.c_str() ),";nTracks;truth dvs" 	, truth_dv.nCh1GeVd0 	, 25, -0.5, 24.5 	, truth_dv.weight );
+		plotter.Plot1D(Form("%s_unmatched_truthdv_R"  		, sample.c_str() ),";R [mm];truth dvs" 		, truth_dv.r 			, 100, 0, 500 		, truth_dv.weight );
+		plotter.Plot1D(Form("%s_unmatched_truthdv_Rxy" 		, sample.c_str() ),";Rxy [mm];truth dvs" 	, truth_dv.rxy 			, 100, 0, 300	 	, truth_dv.weight );
+		plotter.Plot1D(Form("%s_unmatched_truthdv_z"  		, sample.c_str() ),";z [mm];truth dvs" 		, truth_dv.z 			, 100, -300, 300 	, truth_dv.weight );
+
+
+	
+		//Muon reco_mu = return_reco_muon(truth_mu.reco_match, reco_mus);
+		//plotter.Plot1D(Form("%s_recoMatched_muon_dR"  , sample.c_str() ),";#DeltaR(reco,truth);matched muons" 	, truth_mu.p4.DeltaR(reco_mu.p4) , 100, 0, 0.1, truth_mu.weight );
+	} 
+
+	// Compared to reco muon
+
+	return;
+}
 
 //
 // Functions to do muon matching 
@@ -200,23 +244,23 @@ TruthMuon return_truth_muon(int index, std::vector<TruthMuon> truth_mus)
 void matched_muon_plots(TruthMuon truth_mu, std::vector<Muon> reco_mus, std::string sample="MC")
 {
 	// Individual properties 
-	plotter.Plot1D(Form("%s_all_truthmuon_eta" , sample.c_str() ),";truth eta;truth muons" 		, truth_mu.eta, 100, -5, 5 		, truth_mu.weight );
+	plotter.Plot1D(Form("%s_all_truthmuon_eta" , sample.c_str() ),";truth eta;truth muons" 		, truth_mu.eta, 100, -3.5, 3.5 		, truth_mu.weight );
 	plotter.Plot1D(Form("%s_all_truthmuon_pt"  , sample.c_str() ),";truth pT [GeV];truth muons" , truth_mu.pt , 100, 0, 2000 	, truth_mu.weight );
 	plotter.Plot1D(Form("%s_all_truthmuon_phi" , sample.c_str() ),";truth phi;truth muons" 		, truth_mu.phi, 100, -3.5, 3.5 	, truth_mu.weight );
 	plotter.Plot1D(Form("%s_all_truthmuon_d0"  , sample.c_str() ),";truth d0 [mm];truth muons" 	, truth_mu.d0 , 100, 0, 300 	, truth_mu.weight );
 
 	// With Acceptance
 	if (truth_mu.d0 < 300 && fabs(truth_mu.eta) < 2.5 && truth_mu.pt > 25){
-		plotter.Plot1D(Form("%s_acceptance_truthmuon_eta" , sample.c_str() ),";truth eta;truth muons" 		, truth_mu.eta, 100, -5, 5 		, truth_mu.weight );
+		plotter.Plot1D(Form("%s_acceptance_truthmuon_eta" , sample.c_str() ),";truth eta;truth muons" 		, truth_mu.eta, 100, -3.5, 3.5 	, truth_mu.weight );
 		plotter.Plot1D(Form("%s_acceptance_truthmuon_pt"  , sample.c_str() ),";truth pT [GeV];truth muons"  , truth_mu.pt , 100, 0, 2000 	, truth_mu.weight );
 		plotter.Plot1D(Form("%s_acceptance_truthmuon_phi" , sample.c_str() ),";truth phi;truth muons" 		, truth_mu.phi, 100, -3.5, 3.5 	, truth_mu.weight );
 		plotter.Plot1D(Form("%s_acceptance_truthmuon_d0"  , sample.c_str() ),";truth d0 [mm];truth muons" 	, truth_mu.d0 , 100, 0, 300 	, truth_mu.weight );		
 	} 
 
 	// if reco matched
-	if (truth_mu.reco_match > -1 )
+	if (truth_mu.d0 < 300 && fabs(truth_mu.eta) < 2.5 && truth_mu.pt > 25 && truth_mu.reco_match > -1 )
 	{
-		plotter.Plot1D(Form("%s_recomatched_truthmuon_eta" , sample.c_str() ),";truth eta;truth muons" 		, truth_mu.eta, 100, -5, 5 		, truth_mu.weight );
+		plotter.Plot1D(Form("%s_recomatched_truthmuon_eta" , sample.c_str() ),";truth eta;truth muons" 		, truth_mu.eta, 100, -3.5, 3.5 	, truth_mu.weight );
 		plotter.Plot1D(Form("%s_recomatched_truthmuon_pt"  , sample.c_str() ),";truth pT [GeV];truth muons" , truth_mu.pt , 100, 0, 2000 	, truth_mu.weight );
 		plotter.Plot1D(Form("%s_recomatched_truthmuon_phi" , sample.c_str() ),";truth phi;truth muons" 		, truth_mu.phi, 100, -3.5, 3.5 	, truth_mu.weight );
 		plotter.Plot1D(Form("%s_recomatched_truthmuon_d0"  , sample.c_str() ),";truth d0 [mm];truth muons" 	, truth_mu.d0 , 100, 0, 300 	, truth_mu.weight );		

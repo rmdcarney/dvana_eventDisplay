@@ -16,17 +16,22 @@ def getlabel(hist):
 	# sample
 	if "Stop_1000_0p1ns" in dist: label += "1000 GeV, 0.1ns: "
 	if "Stop_1100_1ns"   in dist: label += "1100 GeV, 1ns: "
-	if "RHad_1000_0p1ns" in dist: label += "1100 GeV, 0.1ns: "
+	if "RHad_1000_0p01ns" in dist: label += "m(#tilde{t}) = 1000 GeV, #tau(#tilde{t}) = 0.01 ns "
+	if "RHad_1100_0p1ns"  in dist: label += "m(#tilde{t}) = 1100 GeV, #tau(#tilde{t}) = 0.1 ns "
+	if "RHad_1100_1ns"    in dist: label += "m(#tilde{t}) = 1100 GeV, #tau(#tilde{t}) = 1 ns "
+	if "RHad_1300_0p01ns" in dist: label += "m(#tilde{t}) = 1300 GeV, #tau(#tilde{t}) = 0.01 ns "
+	if "RHad_all"         in dist: label += "R Hadron Samples"
 
 	# matching selection
-	if   "all" 			 in dist: label += " All"
-	if   "truthmatched"  in dist: label += " Truth Matched"
-	if   "recomatched"   in dist: label += " Reco Matched"
-	if   "unmatched" 	 in dist: label += " Unmatched"
+	#if   "all" 			 in dist: label += " All"
+	#if   "truthmatched"  in dist: label += " Truth Matched"
+	#if   "recomatched"   in dist: label += " Reco Matched"
+	#if   "unmatched" 	 in dist: label += " Unmatched"
 
 	# object 
-	if "muon" in dist: label += " Muons"
-	if "DV"   in dist: label += " DVs"
+	#if "muon" in dist: label += " Muons"
+	#if "DV"   in dist: label += " DVs"
+	#if "dv"   in dist: label += " DVs"
 	
 	return label 
 
@@ -54,7 +59,7 @@ def rebin_eff(hist):
 
 	if "dv_R"  in dist: return 5
 	if "dv_m"  in dist: return 5
-	if "dv_ntrks"  in dist: return 2
+	#if "dv_ntrks"  in dist: return 2
 
 
 	return False
@@ -85,6 +90,12 @@ def clean1D(hist,scale=False):
 
 def ratio(hist):
 	# Formats Ratio Histogram
+
+	hist.SetLineWidth(3)
+	hist.SetMarkerSize(2)
+	hist.SetMarkerStyle(20)
+	hist.SetLineColor(ROOT.kBlack)
+	hist.SetMarkerColor(ROOT.kBlack)
 
 	hist.GetYaxis().SetTitleSize(20);
 	hist.GetYaxis().SetTitleFont(43);
@@ -157,7 +168,7 @@ def compare1D(dist1, dist2):
 	legend.Draw()
 
 	canvas.SetLogy(logy)
-	canvas.Print("Plots/Compare_"+dist1+".png")
+	canvas.Print("Plots/Compare/"+dist1+".png")
 	canvas.Close()
 	canvas.SetLogy(0)
 	return
@@ -214,7 +225,7 @@ def print2D(dist):
 	text.SetTextSize(35);
 	text.Draw();
 
-	canvas.Print("Plots/maps/2D_"+dist+".png")
+	canvas.Print("Plots/2D/"+dist+".png")
 	canvas.Close()
 
 	return 
@@ -260,14 +271,12 @@ def efficiency(numerator_name,denominator_name,label1="",label2=""):
 
 	numerator  .SetLineWidth(3)
 	denominator.SetLineWidth(3)
-	numerator  .SetMarkerSize(2)
-	denominator.SetMarkerSize(2)
-	numerator  .SetMarkerStyle(20)
-	denominator.SetMarkerStyle(20)
-	numerator  .SetLineColor(ROOT.kBlack)
-	denominator.SetLineColor(ROOT.kAzure+1)
-	numerator  .SetMarkerColor(ROOT.kBlack)
-	denominator.SetMarkerColor(ROOT.kAzure+1)
+	#numerator  .SetFillStyle(1)
+	#denominator.SetFillStyle(1)
+	#numerator  .SetFillColor(ROOT.kBlack)
+	#denominator.SetFillColor(ROOT.kAzure+1)
+	numerator  .SetLineColor(ROOT.kAzure+1)
+	denominator.SetLineColor(ROOT.kRed+1)
 
 	maxim = max(denominator.GetMaximum(), numerator.GetMaximum())
 	denominator.SetMaximum(1.4*maxim)
@@ -275,14 +284,14 @@ def efficiency(numerator_name,denominator_name,label1="",label2=""):
 		denominator.SetMaximum(50*maxim)
 
 	denominator.GetXaxis().SetLabelSize(0)
-	denominator.Draw()
-	numerator.Draw("same")
+	denominator.Draw("hist")
+	numerator.Draw("hist same")
 
 	y = 0.75
 	legend = ROOT.TLegend(0.2, y, 0.93, 0.91)
 	legend.SetBorderSize(0)
 	legend.SetFillColor(0)
-	legend.SetTextSize(0.045)
+	legend.SetTextSize(0.05)
 	legend.AddEntry(numerator    ,label1,"l") 
 	legend.AddEntry(denominator  ,label2,"l")   
 	legend.Draw()
@@ -318,18 +327,23 @@ def efficiency(numerator_name,denominator_name,label1="",label2=""):
 def do1Dcomparisons():
 	
 	# DV truth DVs v. fake DVs Plots 
-	compare1D("RHad_1100_1ns_truthmatched_recodv_Rxy" 		, "RHad_1100_1ns_unmatched_recodv_Rxy"		)
-	compare1D("RHad_1100_1ns_truthmatched_recodv_R" 		, "RHad_1100_1ns_unmatched_recodv_R"		)
-	compare1D("RHad_1100_1ns_truthmatched_recodv_m" 		, "RHad_1100_1ns_unmatched_recodv_m"		)
-	compare1D("RHad_1100_1ns_truthmatched_recodv_mbig" 		, "RHad_1100_1ns_unmatched_recodv_mbig"		)
-	compare1D("RHad_1100_1ns_truthmatched_recodv_ntrks" 	, "RHad_1100_1ns_unmatched_recodv_ntrks"	)
-	
+	#compare1D("RHad_1100_1ns_truthmatched_recodv_Rxy" 		, "RHad_1100_1ns_unmatched_recodv_Rxy"		)
+	#compare1D("RHad_1100_1ns_truthmatched_recodv_R" 		, "RHad_1100_1ns_unmatched_recodv_R"		)
+	#compare1D("RHad_1100_1ns_truthmatched_recodv_m" 		, "RHad_1100_1ns_unmatched_recodv_m"		)
+	#compare1D("RHad_1100_1ns_truthmatched_recodv_mbig" 		, "RHad_1100_1ns_unmatched_recodv_mbig"		)
+	#compare1D("RHad_1100_1ns_truthmatched_recodv_ntrks" 	, "RHad_1100_1ns_unmatched_recodv_ntrks"	)
+	#
+	#compare1D("RHad_1100_0p1ns_truthmatched_recodv_Rxy" 		, "RHad_1100_0p1ns_unmatched_recodv_Rxy"		)
+	#compare1D("RHad_1100_0p1ns_truthmatched_recodv_R" 			, "RHad_1100_0p1ns_unmatched_recodv_R"			)
+	#compare1D("RHad_1100_0p1ns_truthmatched_recodv_m" 			, "RHad_1100_0p1ns_unmatched_recodv_m"			)
+	#compare1D("RHad_1100_0p1ns_truthmatched_recodv_mbig" 		, "RHad_1100_0p1ns_unmatched_recodv_mbig"		)
+	#compare1D("RHad_1100_0p1ns_truthmatched_recodv_ntrks" 		, "RHad_1100_0p1ns_unmatched_recodv_ntrks"		)
 	# DV truth DVs v. fake DVs Plots 
-	compare1D("RHad_1000_0p01ns_truthmatched_recodv_Rxy" 		, "RHad_1000_0p01ns_unmatched_recodv_Rxy"		)
-	compare1D("RHad_1000_0p01ns_truthmatched_recodv_R" 			, "RHad_1000_0p01ns_unmatched_recodv_R"			)
-	compare1D("RHad_1000_0p01ns_truthmatched_recodv_m" 			, "RHad_1000_0p01ns_unmatched_recodv_m"			)
-	compare1D("RHad_1000_0p01ns_truthmatched_recodv_mbig" 		, "RHad_1000_0p01ns_unmatched_recodv_mbig"		)
-	compare1D("RHad_1000_0p01ns_truthmatched_recodv_ntrks" 		, "RHad_1000_0p01ns_unmatched_recodv_ntrks"		)
+	#compare1D("RHad_1000_0p01ns_truthmatched_recodv_Rxy" 		, "RHad_1000_0p01ns_unmatched_recodv_Rxy"		)
+	#compare1D("RHad_1000_0p01ns_truthmatched_recodv_R" 			, "RHad_1000_0p01ns_unmatched_recodv_R"			)
+	#compare1D("RHad_1000_0p01ns_truthmatched_recodv_m" 			, "RHad_1000_0p01ns_unmatched_recodv_m"			)
+	#compare1D("RHad_1000_0p01ns_truthmatched_recodv_mbig" 		, "RHad_1000_0p01ns_unmatched_recodv_mbig"		)
+	#compare1D("RHad_1000_0p01ns_truthmatched_recodv_ntrks" 		, "RHad_1000_0p01ns_unmatched_recodv_ntrks"		)
 	
 	# Muon plots 
 	compare1D("RHad_1000_0p01ns_all_truthmuon_d0"  , "RHad_1000_0p01ns_recomatched_truthmuon_d0"  )
@@ -337,6 +351,10 @@ def do1Dcomparisons():
 	compare1D("RHad_1000_0p01ns_all_truthmuon_eta" , "RHad_1000_0p01ns_recomatched_truthmuon_eta" )
 	compare1D("RHad_1000_0p01ns_all_truthmuon_phi" , "RHad_1000_0p01ns_recomatched_truthmuon_phi" )
 	
+	compare1D("RHad_1100_0p1ns_all_truthmuon_d0"  , "RHad_1100_0p1ns_recomatched_truthmuon_d0"  )
+	compare1D("RHad_1100_0p1ns_all_truthmuon_pt"  , "RHad_1100_0p1ns_recomatched_truthmuon_pt"  )
+	compare1D("RHad_1100_0p1ns_all_truthmuon_eta" , "RHad_1100_0p1ns_recomatched_truthmuon_eta" )
+	compare1D("RHad_1100_0p1ns_all_truthmuon_phi" , "RHad_1100_0p1ns_recomatched_truthmuon_phi" )
 	
 	compare1D("RHad_1100_1ns_all_truthmuon_d0"  , "RHad_1100_1ns_recomatched_truthmuon_d0"  )
 	compare1D("RHad_1100_1ns_all_truthmuon_pt"  , "RHad_1100_1ns_recomatched_truthmuon_pt"  )
@@ -352,17 +370,80 @@ def doMuonEfficiency():
 	efficiency("RHad_1100_1ns_recomatched_truthmuon_pt"  , "RHad_1100_1ns_acceptance_truthmuon_pt" , label_num, label_den )
 	efficiency("RHad_1100_1ns_recomatched_truthmuon_eta" , "RHad_1100_1ns_acceptance_truthmuon_eta", label_num, label_den )
 	efficiency("RHad_1100_1ns_recomatched_truthmuon_phi" , "RHad_1100_1ns_acceptance_truthmuon_phi", label_num, label_den )
+
+	efficiency("RHad_1100_0p1ns_recomatched_truthmuon_d0"  , "RHad_1100_0p1ns_acceptance_truthmuon_d0" , label_num, label_den )
+	efficiency("RHad_1100_0p1ns_recomatched_truthmuon_pt"  , "RHad_1100_0p1ns_acceptance_truthmuon_pt" , label_num, label_den )
+	efficiency("RHad_1100_0p1ns_recomatched_truthmuon_eta" , "RHad_1100_0p1ns_acceptance_truthmuon_eta", label_num, label_den )
+	efficiency("RHad_1100_0p1ns_recomatched_truthmuon_phi" , "RHad_1100_0p1ns_acceptance_truthmuon_phi", label_num, label_den )
 	return 
 
 def doDVEfficiency():
-	label_den = "Alls DVs"
-	label_num = "Truth Matched DVs"
-	efficiency("RHad_1100_1ns_truthmatched_recodv_Rxy" 		, "RHad_1100_1ns_all_recodv_Rxy"		, label_num, label_den )
-	efficiency("RHad_1100_1ns_truthmatched_recodv_R" 		, "RHad_1100_1ns_all_recodv_R"			, label_num, label_den )
-	efficiency("RHad_1100_1ns_truthmatched_recodv_m" 		, "RHad_1100_1ns_all_recodv_m"			, label_num, label_den )
-	efficiency("RHad_1100_1ns_truthmatched_recodv_mbig" 	, "RHad_1100_1ns_all_recodv_mbig"		, label_num, label_den )
-	efficiency("RHad_1100_1ns_truthmatched_recodv_ntrks" 	, "RHad_1100_1ns_all_recodv_ntrks"		, label_num, label_den )
+	label_den = "Truth DVs"
+	label_num = "Reco Matched DVs"
 
+	efficiency("RHad_all_recomatched_truthdv_Rxy" 		, "RHad_all_all_truthdv_Rxy"		, label_num, label_den )
+	efficiency("RHad_all_recomatched_truthdv_R" 		, "RHad_all_all_truthdv_R"			, label_num, label_den )
+	efficiency("RHad_all_recomatched_truthdv_m" 		, "RHad_all_all_truthdv_m"			, label_num, label_den )
+	efficiency("RHad_all_recomatched_truthdv_ntrks" 	, "RHad_all_all_truthdv_ntrks"		, label_num, label_den )
+
+	efficiency("RHad_1100_1ns_recomatched_truthdv_Rxy" 		, "RHad_1100_1ns_all_truthdv_Rxy"		, label_num, label_den )
+	efficiency("RHad_1100_1ns_recomatched_truthdv_R" 		, "RHad_1100_1ns_all_truthdv_R"			, label_num, label_den )
+	efficiency("RHad_1100_1ns_recomatched_truthdv_m" 		, "RHad_1100_1ns_all_truthdv_m"			, label_num, label_den )
+	efficiency("RHad_1100_1ns_recomatched_truthdv_ntrks" 	, "RHad_1100_1ns_all_truthdv_ntrks"		, label_num, label_den )
+	
+	efficiency("RHad_1100_0p1ns_recomatched_truthdv_Rxy" 	, "RHad_1100_0p1ns_all_truthdv_Rxy"		, label_num, label_den )
+	efficiency("RHad_1100_0p1ns_recomatched_truthdv_R" 		, "RHad_1100_0p1ns_all_truthdv_R"		, label_num, label_den )
+	efficiency("RHad_1100_0p1ns_recomatched_truthdv_m" 		, "RHad_1100_0p1ns_all_truthdv_m"		, label_num, label_den )
+	efficiency("RHad_1100_0p1ns_recomatched_truthdv_ntrks" 	, "RHad_1100_0p1ns_all_truthdv_ntrks"	, label_num, label_den )	
+
+	#label_den = "Alls DVs"
+	#label_num = "Truth Matched DVs"
+	#
+	#efficiency("RHad_1100_1ns_truthmatched_recodv_Rxy" 		, "RHad_1100_1ns_all_recodv_Rxy"		, label_num, label_den )
+	#efficiency("RHad_1100_1ns_truthmatched_recodv_R" 		, "RHad_1100_1ns_all_recodv_R"			, label_num, label_den )
+	#efficiency("RHad_1100_1ns_truthmatched_recodv_m" 		, "RHad_1100_1ns_all_recodv_m"			, label_num, label_den )
+	#efficiency("RHad_1100_1ns_truthmatched_recodv_mbig" 	, "RHad_1100_1ns_all_recodv_mbig"		, label_num, label_den )
+	#efficiency("RHad_1100_1ns_truthmatched_recodv_ntrks" 	, "RHad_1100_1ns_all_recodv_ntrks"		, label_num, label_den )
+	#
+	#efficiency("RHad_1100_0p1ns_truthmatched_recodv_Rxy" 	, "RHad_1100_0p1ns_all_recodv_Rxy"		, label_num, label_den )
+	#efficiency("RHad_1100_0p1ns_truthmatched_recodv_R" 		, "RHad_1100_0p1ns_all_recodv_R"		, label_num, label_den )
+	#efficiency("RHad_1100_0p1ns_truthmatched_recodv_m" 		, "RHad_1100_0p1ns_all_recodv_m"		, label_num, label_den )
+	#efficiency("RHad_1100_0p1ns_truthmatched_recodv_mbig" 	, "RHad_1100_0p1ns_all_recodv_mbig"		, label_num, label_den )
+	#efficiency("RHad_1100_0p1ns_truthmatched_recodv_ntrks" 	, "RHad_1100_0p1ns_all_recodv_ntrks"	, label_num, label_den )
+
+	return 
+
+def do2D():
+	print2D( "RHad_1000_0p01ns_recomatched_mdiff_truthdv_rxy") 
+	print2D( "RHad_1000_0p01ns_recomatched_ntrkdiff_truthdv_rxy") 
+	print2D( "RHad_1100_0p1ns_recomatched_mdiff_truthdv_rxy") 
+	print2D( "RHad_1100_0p1ns_recomatched_ntrkdiff_truthdv_rxy") 
+	print2D( "RHad_1100_1ns_recomatched_mdiff_truthdv_rxy") 
+	print2D( "RHad_1100_1ns_recomatched_ntrkdiff_truthdv_rxy") 
+	print2D( "RHad_1300_0p01ns_recomatched_mdiff_truthdv_rxy") 
+	print2D( "RHad_1300_0p01ns_recomatched_ntrkdiff_truthdv_rxy") 
+	print2D( "RHad_all_recomatched_mdiff_truthdv_rxy") 	
+	print2D( "RHad_all_recomatched_ntrkdiff_truthdv_rxy") 
+
+	print2D("RHad_1000_0p01ns_recomatched_truthdv_m_recodv_m") 
+	print2D("RHad_1100_0p1ns_recomatched_truthdv_m_recodv_m") 
+	print2D("RHad_1100_1ns_recomatched_truthdv_m_recodv_m") 
+	print2D("RHad_1300_0p01ns_recomatched_truthdv_m_recodv_m") 
+	print2D("RHad_all_recomatched_truthdv_m_recodv_m") 
+
+	print2D( "RHad_1000_0p01ns_recomatched_truthdv_ntrks_recodv_ntrks")
+	print2D( "RHad_1100_0p1ns_recomatched_truthdv_ntrks_recodv_ntrks")
+	print2D( "RHad_1100_1ns_recomatched_truthdv_ntrks_recodv_ntrks")
+	print2D( "RHad_1300_0p01ns_recomatched_truthdv_ntrks_recodv_ntrks")
+	print2D( "RHad_all_recomatched_truthdv_ntrks_recodv_ntrks")
+
+	print2D("RHad_1000_0p01ns_recomatched_ntrkdiff_mdiff")
+	print2D("RHad_1100_0p1ns_recomatched_ntrkdiff_mdiff")
+	print2D("RHad_1100_1ns_recomatched_ntrkdiff_mdiff")
+	print2D("RHad_1300_0p01ns_recomatched_ntrkdiff_mdiff")
+	print2D("RHad_all_recomatched_ntrkdiff_mdiff")
+
+	return 
 
 # setup
 setStyle()
@@ -371,6 +452,7 @@ setStyle()
 doDVEfficiency()
 doMuonEfficiency()
 do1Dcomparisons()
+do2D()
 
 #printHowWeDid()
 
