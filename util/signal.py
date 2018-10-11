@@ -92,7 +92,7 @@ def signalLabel(hist):
 
 	return label
 
-def comparison(dist,scale=1):
+def comparison(dist,scale=0):
 
 	
 	# 1 - 1100 0.1 ns
@@ -137,11 +137,11 @@ def comparison(dist,scale=1):
 	hist3 = signal(hist3)  
 	#hist4 = signal(hist4)  
 
-	if "all_mu" in dist: hist1.GetYaxis().SetTitle("Muons [au]")
-	if "DVs_dv" in dist: hist1.GetYaxis().SetTitle("DVs")
-	if "PassPre_dv" in dist: hist1.GetYaxis().SetTitle("Preselected DVs [au]")
-	if "PassPreNtrkMass_dv" in dist: hist1.GetYaxis().SetTitle("Fully selected DVs [au]")
-	if "LHTMET" in dist: hist1.GetYaxis().SetTitle("events [au]")
+	#if "all_mu" in dist: hist1.GetYaxis().SetTitle("Muons [au]")
+	#if "DVs_dv" in dist: hist1.GetYaxis().SetTitle("DVs")
+	#if "PassPre_dv" in dist: hist1.GetYaxis().SetTitle("Preselected DVs [au]")
+	#if "PassPreNtrkMass_dv" in dist: hist1.GetYaxis().SetTitle("Fully selected DVs [au]")
+	#if "LHTMET" in dist: hist1.GetYaxis().SetTitle("events [au]")
 
 	hist1.Draw("hist")
 	hist2.Draw("hist same")
@@ -208,8 +208,7 @@ def makePlots():
 	#dists.append("truthmatched_recodv_R")
 
 	for dist in dists:
-		if "dv" in dist: comparison(dist,0)
-		else : comparison(dist)
+		comparison(dist)
 
 
 #main 

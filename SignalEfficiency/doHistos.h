@@ -265,9 +265,13 @@ public :
    std::vector<double>       *truthSparticle_VtxMChParticles ; 
    std::vector<double>       *truthSparticle_VtxMChParticles1GeV ; 
    std::vector<double>       *truthSparticle_VtxMChParticles1GeVd0 ; 
+   std::vector<double>       *truthSparticle_VtxMChParticles1GeVd0dist ; 
+   std::vector<double>       *truthSparticle_VtxMChParticles1GeVd0distReco ; 
    std::vector<int>          *truthSparticle_VtxNChParticles ; 
    std::vector<int>          *truthSparticle_VtxNChParticles1GeV ; 
    std::vector<int>          *truthSparticle_VtxNChParticles1GeVd0 ; 
+   std::vector<int>          *truthSparticle_VtxNChParticles1GeVd0dist ;
+   std::vector<int>          *truthSparticle_VtxNChParticles1GeVd0distReco ;
    std::vector<unsigned long> *truthSparticle_VtxNParticles ;                
    std::vector<float>        *truthSparticle_VtxX ; 
    std::vector<float>        *truthSparticle_VtxY ; 
@@ -520,9 +524,13 @@ public :
    TBranch *b_truthSparticle_VtxMChParticles ; //! 
    TBranch *b_truthSparticle_VtxMChParticles1GeV ; //! 
    TBranch *b_truthSparticle_VtxMChParticles1GeVd0 ; //! 
+   TBranch *b_truthSparticle_VtxMChParticles1GeVd0dist ; //! 
+   TBranch *b_truthSparticle_VtxMChParticles1GeVd0distReco ; //! 
    TBranch *b_truthSparticle_VtxNChParticles ; //! 
    TBranch *b_truthSparticle_VtxNChParticles1GeV ; //! 
    TBranch *b_truthSparticle_VtxNChParticles1GeVd0 ; //! 
+   TBranch *b_truthSparticle_VtxNChParticles1GeVd0dist ; //! 
+   TBranch *b_truthSparticle_VtxNChParticles1GeVd0distReco ; //! 
    TBranch *b_truthSparticle_VtxNParticles ; //!                
    TBranch *b_truthSparticle_VtxX ; //! 
    TBranch *b_truthSparticle_VtxY ; //! 
@@ -820,9 +828,13 @@ void doHistos::Init(TTree *tree,bool isMC)
    truthSparticle_VtxMChParticles = 0 ; 
    truthSparticle_VtxMChParticles1GeV = 0 ; 
    truthSparticle_VtxMChParticles1GeVd0 = 0 ; 
+   truthSparticle_VtxMChParticles1GeVd0dist = 0 ; 
+   truthSparticle_VtxMChParticles1GeVd0distReco = 0 ; 
    truthSparticle_VtxNChParticles = 0 ; 
    truthSparticle_VtxNChParticles1GeV = 0 ; 
    truthSparticle_VtxNChParticles1GeVd0 = 0 ; 
+   truthSparticle_VtxNChParticles1GeVd0dist = 0 ; 
+   truthSparticle_VtxNChParticles1GeVd0distReco = 0 ; 
    truthSparticle_VtxNParticles = 0 ;                
    truthSparticle_VtxX = 0 ; 
    truthSparticle_VtxY = 0 ; 
@@ -1089,9 +1101,13 @@ void doHistos::Init(TTree *tree,bool isMC)
       fChain->SetBranchAddress("truthSparticle_VtxMChParticles" ,&truthSparticle_VtxMChParticles, &b_truthSparticle_VtxMChParticles) ; 
       fChain->SetBranchAddress("truthSparticle_VtxMChParticles1GeV" ,&truthSparticle_VtxMChParticles1GeV, &b_truthSparticle_VtxMChParticles1GeV) ; 
       fChain->SetBranchAddress("truthSparticle_VtxMChParticles1GeVd0" ,&truthSparticle_VtxMChParticles1GeVd0, &b_truthSparticle_VtxMChParticles1GeVd0) ; 
+      fChain->SetBranchAddress("truthSparticle_VtxMChParticles1GeVd0dist" ,&truthSparticle_VtxMChParticles1GeVd0dist, &b_truthSparticle_VtxMChParticles1GeVd0distReco) ; 
+      fChain->SetBranchAddress("truthSparticle_VtxMChParticles1GeVd0distReco" ,&truthSparticle_VtxMChParticles1GeVd0distReco, &b_truthSparticle_VtxMChParticles1GeVd0distReco) ; 
       fChain->SetBranchAddress("truthSparticle_VtxNChParticles" ,&truthSparticle_VtxNChParticles, &b_truthSparticle_VtxNChParticles) ; 
       fChain->SetBranchAddress("truthSparticle_VtxNChParticles1GeV" ,&truthSparticle_VtxNChParticles1GeV, &b_truthSparticle_VtxNChParticles1GeV) ; 
       fChain->SetBranchAddress("truthSparticle_VtxNChParticles1GeVd0" ,&truthSparticle_VtxNChParticles1GeVd0, &b_truthSparticle_VtxNChParticles1GeVd0) ; 
+      fChain->SetBranchAddress("truthSparticle_VtxNChParticles1GeVd0dist" ,&truthSparticle_VtxNChParticles1GeVd0dist, &b_truthSparticle_VtxNChParticles1GeVd0dist) ; 
+      fChain->SetBranchAddress("truthSparticle_VtxNChParticles1GeVd0distReco" ,&truthSparticle_VtxNChParticles1GeVd0distReco, &b_truthSparticle_VtxNChParticles1GeVd0distReco) ; 
       fChain->SetBranchAddress("truthSparticle_VtxNParticles" ,&truthSparticle_VtxNParticles, &b_truthSparticle_VtxNParticles) ;                
       fChain->SetBranchAddress("truthSparticle_VtxX" ,&truthSparticle_VtxX, &b_truthSparticle_VtxX) ; 
       fChain->SetBranchAddress("truthSparticle_VtxY" ,&truthSparticle_VtxY, &b_truthSparticle_VtxY) ; 

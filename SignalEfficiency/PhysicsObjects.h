@@ -202,11 +202,15 @@ struct TruthVertex {
   float mCh    ;
   float mCh1GeV;
   float mCh1GeVd0;
+  float mCh1GeVd0dist;
+  float mCh1GeVd0distReco;
   
   float n      ;
   float nCh    ;
   float nCh1GeV;
   float nCh1GeVd0;
+  float nCh1GeVd0dist;
+  float nCh1GeVd0distReco;
 
   float r      ;
   float rxy    ;

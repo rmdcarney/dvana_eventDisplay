@@ -736,10 +736,14 @@ void doHistos::Loop(std::string s_sample)
   				truthVertex.mCh    		= truthSparticle_VtxMChParticles->at(vtx);
   				truthVertex.mCh1GeV		= truthSparticle_VtxMChParticles1GeV->at(vtx);
   				truthVertex.mCh1GeVd0   = truthSparticle_VtxMChParticles1GeVd0->at(vtx);
+  				truthVertex.mCh1GeVd0dist   	= truthSparticle_VtxMChParticles1GeVd0dist->at(vtx);
+  				truthVertex.mCh1GeVd0distReco   = truthSparticle_VtxMChParticles1GeVd0distReco->at(vtx);
   				truthVertex.n         	= truthSparticle_VtxNParticles->at(vtx); 
   				truthVertex.nCh    	  	= truthSparticle_VtxNChParticles->at(vtx);
   				truthVertex.nCh1GeV   	= truthSparticle_VtxNChParticles1GeV->at(vtx);
   				truthVertex.nCh1GeVd0 	= truthSparticle_VtxNChParticles1GeVd0->at(vtx);
+  				truthVertex.nCh1GeVd0dist 		= truthSparticle_VtxNChParticles1GeVd0dist->at(vtx);
+  				truthVertex.nCh1GeVd0distReco 	= truthSparticle_VtxNChParticles1GeVd0distReco->at(vtx);
 	
   				truthVertex.r      = vertexR(truthSparticle_VtxX->at(vtx),truthSparticle_VtxY->at(vtx),truthSparticle_VtxZ->at(vtx));
   				truthVertex.rxy    = vertexRxy(truthSparticle_VtxX->at(vtx),truthSparticle_VtxY->at(vtx));
@@ -805,7 +809,7 @@ void doHistos::Loop(std::string s_sample)
 		doHistos::makeCutflow( s_sample, muons, displacedVertices, evt_wght);
 		DVPlots  ( s_sample, displacedVertices , "DVs" , evt_wght);
 		muonPlots( s_sample, muons, "muons", evt_wght); 
-		plotter.Plot1D(Form("%s_LHTMET",s_sample.c_str()),";LHT MET [GeV];events", MET_LHT, 200, 0, 2000    );
+		plotter.Plot1D(Form("%s_LHTMET",s_sample.c_str()),";LHT MET [GeV];events", MET_LHT, 200, 0, 2000  , evt_wght  );
 
 		// save leading muon
 		for (int i = 0; i<truthMuons.size(); i++ )

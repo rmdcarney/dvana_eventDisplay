@@ -414,34 +414,24 @@ def doDVEfficiency():
 	return 
 
 def do2D():
-	print2D( "RHad_1000_0p01ns_recomatched_mdiff_truthdv_rxy") 
-	print2D( "RHad_1000_0p01ns_recomatched_ntrkdiff_truthdv_rxy") 
-	print2D( "RHad_1100_0p1ns_recomatched_mdiff_truthdv_rxy") 
-	print2D( "RHad_1100_0p1ns_recomatched_ntrkdiff_truthdv_rxy") 
-	print2D( "RHad_1100_1ns_recomatched_mdiff_truthdv_rxy") 
-	print2D( "RHad_1100_1ns_recomatched_ntrkdiff_truthdv_rxy") 
-	print2D( "RHad_1300_0p01ns_recomatched_mdiff_truthdv_rxy") 
-	print2D( "RHad_1300_0p01ns_recomatched_ntrkdiff_truthdv_rxy") 
-	print2D( "RHad_all_recomatched_mdiff_truthdv_rxy") 	
-	print2D( "RHad_all_recomatched_ntrkdiff_truthdv_rxy") 
 
-	print2D("RHad_1000_0p01ns_recomatched_truthdv_m_recodv_m") 
-	print2D("RHad_1100_0p1ns_recomatched_truthdv_m_recodv_m") 
-	print2D("RHad_1100_1ns_recomatched_truthdv_m_recodv_m") 
-	print2D("RHad_1300_0p01ns_recomatched_truthdv_m_recodv_m") 
-	print2D("RHad_all_recomatched_truthdv_m_recodv_m") 
+	print2D( "RHad_all_recomatched_tracking_mdiff_truthdv_rxy") 	
+	print2D( "RHad_all_recomatched_tracking_ntrkdiff_truthdv_rxy") 
+	print2D( "RHad_all_recomatched_tracking_truthdv_m_recodv_m") 
+	print2D( "RHad_all_recomatched_tracking_truthdv_ntrks_recodv_ntrks")
+	print2D( "RHad_all_recomatched_tracking_ntrkdiff_mdiff")
 
-	print2D( "RHad_1000_0p01ns_recomatched_truthdv_ntrks_recodv_ntrks")
-	print2D( "RHad_1100_0p1ns_recomatched_truthdv_ntrks_recodv_ntrks")
-	print2D( "RHad_1100_1ns_recomatched_truthdv_ntrks_recodv_ntrks")
-	print2D( "RHad_1300_0p01ns_recomatched_truthdv_ntrks_recodv_ntrks")
-	print2D( "RHad_all_recomatched_truthdv_ntrks_recodv_ntrks")
+	print2D( "RHad_all_recomatched_vertexing_mdiff_truthdv_rxy") 	
+	print2D( "RHad_all_recomatched_vertexing_ntrkdiff_truthdv_rxy") 
+	print2D( "RHad_all_recomatched_vertexing_truthdv_m_recodv_m") 
+	print2D( "RHad_all_recomatched_vertexing_truthdv_ntrks_recodv_ntrks")
+	print2D( "RHad_all_recomatched_vertexing_ntrkdiff_mdiff")
 
-	print2D("RHad_1000_0p01ns_recomatched_ntrkdiff_mdiff")
-	print2D("RHad_1100_0p1ns_recomatched_ntrkdiff_mdiff")
-	print2D("RHad_1100_1ns_recomatched_ntrkdiff_mdiff")
-	print2D("RHad_1300_0p01ns_recomatched_ntrkdiff_mdiff")
-	print2D("RHad_all_recomatched_ntrkdiff_mdiff")
+	print2D( "RHad_all_recomatched_both_mdiff_truthdv_rxy") 	
+	print2D( "RHad_all_recomatched_both_ntrkdiff_truthdv_rxy") 
+	print2D( "RHad_all_recomatched_both_truthdv_m_recodv_m") 
+	print2D( "RHad_all_recomatched_both_truthdv_ntrks_recodv_ntrks")
+	print2D( "RHad_all_recomatched_both_ntrkdiff_mdiff")
 
 	return 
 
