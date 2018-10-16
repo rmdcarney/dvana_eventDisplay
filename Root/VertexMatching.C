@@ -3,7 +3,8 @@
 // Functions necessary to do vertex and reco matching 
 //
 float sphereCut(float DVR){
-	return 0.0133333333*DVR + 1;
+	//return 0.0133333333*DVR + 1;// from dv+met parameterization
+	return 5;
 }
 float vertex_distance(DV dv, TruthVertex rh)
 {
@@ -23,7 +24,7 @@ bool dv_passSelection(DV dv)
 {
 	// ignore material veto for now
 	//if (dv.passFiducialCuts && dv.passChisqCut && dv.passDistCut && dv.passMaterialVeto && dv.passMassCut10 && dv.passNtrackCut3) return true;
-	if (dv.passFiducialCuts && dv.passChisqCut && dv.passDistCut && dv.passMassCut10 && dv.passNtrackCut3) return true;
+	if (dv.passFiducialCuts && dv.passChisqCut && dv.passDistCut && dv.passMassCut10 && dv.passNtrackCut3) return true; 
 	else return false;
 }
 int find_matching_truth_vertex(DV dv, std::vector<TruthVertex> rhadrons)
@@ -97,7 +98,7 @@ void reco_dv_plots(DV reco_dv, std::vector<TruthVertex> truth_vtxs, std::string 
 	plotter.Plot1D(Form("%s_all_recodv_z"  		, sample.c_str() ),";z [mm];reco dvs" 		, reco_dv.z 		, 100, -300, 300 	, reco_dv.weight );
 	plotter.Plot1D(Form("%s_all_recodv_phi"  	, sample.c_str() ),";phi;reco dvs" 			, reco_dv.phi 		, 100, -3.5, 3.5 	, reco_dv.weight );
 
-	// if reco matched
+	// if dv is truth matched
 	if (reco_dv.truth_match > -1 )
 	{
 		plotter.Plot1D(Form("%s_truthmatched_recodv_m" 			, sample.c_str() ),";m [GeV];reco dvs" 		, reco_dv.m 		, 100, 0, 100 		, reco_dv.weight );
@@ -109,8 +110,6 @@ void reco_dv_plots(DV reco_dv, std::vector<TruthVertex> truth_vtxs, std::string 
 		plotter.Plot1D(Form("%s_truthmatched_recodv_z"  		, sample.c_str() ),";z [mm];reco dvs" 		, reco_dv.z 		, 100, -300, 300 	, reco_dv.weight );
 		plotter.Plot1D(Form("%s_truthmatched_recodv_phi"  		, sample.c_str() ),";phi;reco dvs" 			, reco_dv.phi 		, 100, -3.5, 3.5 	, reco_dv.weight );	
 	
-		//Muon reco_mu = return_reco_muon(truth_mu.reco_match, reco_mus);
-		//plotter.Plot1D(Form("%s_recoMatched_muon_dR"  , sample.c_str() ),";#DeltaR(reco,truth);matched muons" 	, truth_mu.p4.DeltaR(reco_mu.p4) , 100, 0, 0.1, truth_mu.weight );
 	} 
 	else
 	{
@@ -123,11 +122,9 @@ void reco_dv_plots(DV reco_dv, std::vector<TruthVertex> truth_vtxs, std::string 
 		plotter.Plot1D(Form("%s_unmatched_recodv_z"  		, sample.c_str() ),";z [mm];reco dvs" 		, reco_dv.z 		, 100, -300, 300 	, reco_dv.weight );
 		plotter.Plot1D(Form("%s_unmatched_recodv_phi"  		, sample.c_str() ),";phi;reco dvs" 			, reco_dv.phi 		, 100, -3.5, 3.5 	, reco_dv.weight );	
 	
-		//Muon reco_mu = return_reco_muon(truth_mu.reco_match, reco_mus);
-		//plotter.Plot1D(Form("%s_recoMatched_muon_dR"  , sample.c_str() ),";#DeltaR(reco,truth);matched muons" 	, truth_mu.p4.DeltaR(reco_mu.p4) , 100, 0, 0.1, truth_mu.weight );
+
 	} 
 
-	// Compared to reco muon
 
 	return;
 }
@@ -140,7 +137,7 @@ void truth_dv_plots(TruthVertex truth_dv, std::vector<DV> reco_dvs, std::string 
 	plotter.Plot1D(Form("%s_all_truthdv_Rxy" 		, sample.c_str() ),";Rxy [mm];truth dvs" 	, truth_dv.rxy 			, 100, 0, 300	 	, truth_dv.weight );
 	plotter.Plot1D(Form("%s_all_truthdv_z"  		, sample.c_str() ),";z [mm];truth dvs" 		, truth_dv.z 			, 100, -300, 300 	, truth_dv.weight );
 
-	// if reco matched
+	// if truth vertex is reco matched
 	if (truth_dv.reco_match > -1 )
 	{
 		plotter.Plot1D(Form("%s_recomatched_truthdv_m" 			, sample.c_str() ),";m [GeV];truth dvs" 	, truth_dv.mCh1GeVd0 	, 100, 0, 1500 		, truth_dv.weight );
@@ -151,22 +148,25 @@ void truth_dv_plots(TruthVertex truth_dv, std::vector<DV> reco_dvs, std::string 
 	
 		float bins=20;
 		DV reco_dv = return_reco_vertex(truth_dv.reco_match, reco_dvs);
+		// truth tracks which are reconstructed
 		plotter.Plot2D(Form("%s_recomatched_tracking_truthdv_m_recodv_m"			, sample.c_str() ),";m truth accep tracks [GeV];m truth reco tracks [GeV];reco matched DVs"	 , truth_dv.mCh1GeVd0, truth_dv.mCh1GeVd0distReco      , 100, 0, 1500  , 100, 0, 1500  , truth_dv.weight );
 		plotter.Plot2D(Form("%s_recomatched_tracking_truthdv_ntrks_recodv_ntrks" 	, sample.c_str() ),";ntrk truth accep;ntrk truth reco tracks;reco matched DVs"      	 , truth_dv.nCh1GeVd0, truth_dv.nCh1GeVd0distReco, bins, -0.5, bins-0.5, bins, -0.5, bins-0.5, truth_dv.weight );
 		plotter.Plot2D(Form("%s_recomatched_tracking_mdiff_truthdv_rxy"				, sample.c_str() ),";Rxy [mm];m truth reco tracks - truth accep tracks[GeV];reco matched DVs", truth_dv.rxy, truth_dv.mCh1GeVd0distReco - truth_dv.mCh1GeVd0        , 100, 0, 300, 100, -1500, 1500, truth_dv.weight );
 		plotter.Plot2D(Form("%s_recomatched_tracking_ntrkdiff_truthdv_rxy"			, sample.c_str() ),";Rxy [mm];ntrks truth reco tracks - truth accp tracks;reco matched DVs"  , truth_dv.rxy, truth_dv.nCh1GeVd0distReco - truth_dv.nCh1GeVd0  , 100, 0, 300,  bins+1, -bins/2-0.5, bins/2+0.5, truth_dv.weight );
 		plotter.Plot2D(Form("%s_recomatched_tracking_ntrkdiff_mdiff"			 	, sample.c_str() ),";ntrks truth reco tracks - truth accep tracks;m truth reco tracks - truth accp tracks [GeV];reco matched DVs"  , truth_dv.nCh1GeVd0distReco - truth_dv.nCh1GeVd0, truth_dv.mCh1GeVd0distReco - truth_dv.mCh1GeVd0 , bins+1, -bins/2-0.5, bins/2+0.5, 100, -1500, 1500, truth_dv.weight );
 
+		// truth tracks, reconstructed, which are vertexed
 		plotter.Plot2D(Form("%s_recomatched_vertexing_truthdv_m_recodv_m"			, sample.c_str() ),";m truth reco tracks[GeV];m reco dv [GeV];reco matched DVs"	 , truth_dv.mCh1GeVd0distReco, reco_dv.m      , 100, 0, 1500  , 100, 0, 1500  , truth_dv.weight );
 		plotter.Plot2D(Form("%s_recomatched_vertexing_truthdv_ntrks_recodv_ntrks" 	, sample.c_str() ),";ntrk truth reco tracks;ntrk reco dv;reco matched DVs"      	 , truth_dv.nCh1GeVd0distReco, reco_dv.nTracks, bins, -0.5, bins-0.5, bins, -0.5, bins-0.5, truth_dv.weight );
 		plotter.Plot2D(Form("%s_recomatched_vertexing_mdiff_truthdv_rxy"			, sample.c_str() ),";Rxy [mm];m reco dv - truth reco tracks[GeV];reco matched DVs", truth_dv.rxy, reco_dv.m - truth_dv.mCh1GeVd0distReco        , 100, 0, 300, 100, -1500, 1500, truth_dv.weight );
 		plotter.Plot2D(Form("%s_recomatched_vertexing_ntrkdiff_truthdv_rxy"			, sample.c_str() ),";Rxy [mm];ntrks reco dv - truth reco tracks;reco matched DVs"  , truth_dv.rxy, reco_dv.nTracks - truth_dv.nCh1GeVd0distReco  , 100, 0, 300,  bins+1, -bins/2-0.5, bins/2+0.5, truth_dv.weight );
 		plotter.Plot2D(Form("%s_recomatched_vertexing_ntrkdiff_mdiff"			 	, sample.c_str() ),";ntrks reco dv - truth reco tracks;m reco dv - truth reco tracks[GeV];reco matched DVs"  , reco_dv.nTracks - truth_dv.nCh1GeVd0distReco, reco_dv.m - truth_dv.mCh1GeVd0distReco , bins+1, -bins/2-0.5, bins/2+0.5, 100, -1500, 1500, truth_dv.weight );
 
+		// truth tracks which are vertexed
 		plotter.Plot2D(Form("%s_recomatched_both_truthdv_m_recodv_m"			, sample.c_str() ),";m truth accep tracks [GeV];m reco dv [GeV];reco matched DVs"	 , truth_dv.mCh1GeVd0, reco_dv.m      , 100, 0, 1500  , 100, 0, 1500  , truth_dv.weight );
 		plotter.Plot2D(Form("%s_recomatched_both_truthdv_ntrks_recodv_ntrks" 	, sample.c_str() ),";ntrk truth accep tracks;ntrk reco dv;reco matched DVs"      	 , truth_dv.nCh1GeVd0, reco_dv.nTracks, bins, -0.5, bins-0.5, bins, -0.5, bins-0.5, truth_dv.weight );
 		plotter.Plot2D(Form("%s_recomatched_both_mdiff_truthdv_rxy"				, sample.c_str() ),";Rxy [mm];m reco dv - truth accep tracks[GeV];reco matched DVs", truth_dv.rxy, reco_dv.m - truth_dv.mCh1GeVd0        , 100, 0, 300, 100, -1500, 1500, truth_dv.weight );
-		plotter.Plot2D(Form("%s_recomatched_both_ntrkdiff_truthdv_rxy"			, sample.c_str() ),";Rxy [mm];ntrks reco dv- truth accep tracks;reco matched DVs"  , truth_dv.rxy, reco_dv.nTracks - truth_dv.nCh1GeVd0  , 100, 0, 300,  bins+1, -bins/2-0.5, bins/+0.5, truth_dv.weight );
+		plotter.Plot2D(Form("%s_recomatched_both_ntrkdiff_truthdv_rxy"			, sample.c_str() ),";Rxy [mm];ntrks reco dv- truth accep tracks;reco matched DVs"  , truth_dv.rxy, reco_dv.nTracks - truth_dv.nCh1GeVd0  , 100, 0, 300,  bins+1, -bins/2-0.5, bins/2+0.5, truth_dv.weight );
 		plotter.Plot2D(Form("%s_recomatched_both_ntrkdiff_mdiff"			    , sample.c_str() ),";ntrks reco dv - truth accep traacks;m reco dv - truth accep tracks [GeV];reco matched DVs"  , reco_dv.nTracks - truth_dv.nCh1GeVd0, reco_dv.m - truth_dv.mCh1GeVd0 , bins+1, -bins/2-0.5, bins/2+0.5, 100, -1500, 1500, truth_dv.weight );
 		//Muon reco_mu = return_reco_muon(truth_mu.reco_match, reco_mus);
 		//plotter.Plot1D(Form("%s_recoMatched_muon_dR"  , sample.c_str() ),";#DeltaR(reco,truth);matched muons" 	, truth_mu.p4.DeltaR(reco_mu.p4) , 100, 0, 0.1, truth_mu.weight );
@@ -180,19 +180,15 @@ void truth_dv_plots(TruthVertex truth_dv, std::vector<DV> reco_dvs, std::string 
 		plotter.Plot1D(Form("%s_unmatched_truthdv_z"  		, sample.c_str() ),";z [mm];truth dvs" 		, truth_dv.z 			, 100, -300, 300 	, truth_dv.weight );
 
 
-	
-		//Muon reco_mu = return_reco_muon(truth_mu.reco_match, reco_mus);
-		//plotter.Plot1D(Form("%s_recoMatched_muon_dR"  , sample.c_str() ),";#DeltaR(reco,truth);matched muons" 	, truth_mu.p4.DeltaR(reco_mu.p4) , 100, 0, 0.1, truth_mu.weight );
 	} 
 
-	// Compared to reco muon
 
 	return;
 }
 
-//
+// ***************************
 // Functions to do muon matching 
-//
+// ***************************
 int find_matching_reco_muon(std::vector<Muon> reco_mus, TruthMuon truth_mu)
 {
 
