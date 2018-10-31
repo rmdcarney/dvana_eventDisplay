@@ -1,6 +1,7 @@
 #define doHistos_cxx
 #include "SignalEfficiency/doHistos.h"
 #include "Root/VertexMatching.C"
+#include "Root/MuonMatching.C"
 #include "Root/MakeCutflow.C"
 #include "Root/MuonPlots.C"
 #include "Root/DVPlots.C"
@@ -175,111 +176,35 @@ void msTrackPlots(std::string sample_name, std::vector<MSTrack> mstracks,  std::
 
 
 
-int getMuonTrack(Muon muon,std::vector<Track> tracks){
-
-	int matched_track = -99;
-	float eps = 0.005;
-	
-	for (unsigned int trk=0; trk<tracks.size(); trk++ ){
-		Track track = tracks.at(trk);
-    	if ( fabs( track.d0 - muon.d0) < eps && fabs(track.z0 - muon.z0) < eps ) matched_track = trk;
-    }// end loop on tracks
-
-	return matched_track;
-}
-float DOCA( float d0, float z0){
-	// given a d0 and z0 returns the distance of closest approach 
-
-	float doca = sqrt( d0*d0 + z0*z0 );
-	return doca;
-}
-
-float doHistos::recomputeDVmass(std::string sample_name,DV dv,  Muon mu){
-	// if muon is linked to the DV returns the track of interest 
-
-	TLorentzVector dv_4;
-	
-	// Add up tracks associated to DV 
-	for (unsigned int trk=0; trk < track_d0->size(); trk++){
-
-		if (track_DVIndex->at(trk)!=dv.index) continue;
-
-		TLorentzVector trk_4;
-		trk_4.SetPtEtaPhiM(track_ptWrtDV->at(trk),track_etaWrtDV->at(trk),track_phiWrtDV->at(trk),m_pion);
-		dv_4 += trk_4;
-
-
-	} // track loop
-
-	// Add up muons
-	dv_4+=mu.p4;
-
-
-	//std::cout << "Matched Not Linked" << std::endl;
-	//std::cout << "Old M " << DV_m->at(dvtx) 	  << " New M " << dv.m 	   << std::endl;
-	//std::cout << "Old N " << DV_nTracks->at(dvtx) << " New N " << dv.nTracks << std::endl;
-
-	plotter.Plot1D(Form("%s_muDVMatching_oldMass"  , sample_name.c_str()),";DV old mass [GeV];DVs"  , dv.m         , 200 , 0, 1000 );
-	plotter.Plot1D(Form("%s_muDVMatching_newMass"  , sample_name.c_str()),";DV new mass [GeV];DVs"  , dv_4.M()     , 200 , 0, 1000 );
-	plotter.Plot1D(Form("%s_muDVMatching_oldNtrk"  , sample_name.c_str()),";DV old Ntrk ;Dvs"       , dv.nTracks   , 50 , 1.5, 51.5 );
-	plotter.Plot1D(Form("%s_muDVMatching_newNtrk"  , sample_name.c_str()),";DV new Ntrk ;Dvs"       , dv.nTracks+1 , 50 , 1.5, 51.5 );
-
-	return dv_4.M();
-
-
-}
-int doHistos::isMuonDVLink(DV dv,  Muon mu){
-	// if muon is linked to the DV returns the track of interest 
-
-	float eps = 0.0005;
-	bool linked_mu = false;
-	int linked_track = -1;
-
-	for (unsigned int trk=0; trk < track_d0->size(); trk++){
-
-		if (track_DVIndex->at(trk)!=dv.index) continue;
-
-			if (  fabs(mu.d0 - track_d0->at(trk)) < eps && fabs(mu.z0 - track_z0->at(trk)) < eps ) {
-				linked_mu = true;
-				linked_track = trk;
-
-				//std::cout << "DV Index " << dv.index  << " : Muon Index " << mu.index << std::endl;
-				//std::cout << "d_eta " << fabs(mu.eta - Track_eta->at(trk)) << std::endl;
-				//std::cout << "d_phi " << fabs(mu.phi - Track_phi->at(trk)) << std::endl;
-				//std::cout << "d_pt  " << fabs(mu.pt  - Track_pt ->at(trk)) << std::endl;
-				//std::cout << "d_d0  " << fabs(mu.d0  - Track_d0 ->at(trk)) << std::endl;
-				//std::cout << "d_z0  " << fabs(mu.z0  - Track_z0 ->at(trk)) << std::endl;
-			 	
-			 }
-
-	} // track loop
-
-	return linked_track;
-
-
-}
-int doHistos::getMuonDVLink(std::string sample_name, DV dv, std::vector<Muon> mus, float weight=1.){
-	// returns linked muon 
-
-	float linked_mu = -1;
-
-	for (auto mu : mus){
-		
-		if (mu.passPt25 && mu.passEta2p5 && mu.passID) {
-			
-			if (isMuonDVLink(dv,mu) > -1 ) linked_mu = mu.index; 
-		
+std::vector<Track> getTracksAssociatedtoDV(DV dv,std::vector<Track> tracks){
+// Inputs: a DV of interest and all tracks associated to displaced vertices
+// Outputs: a vector of tracks associated/attached to the DV of interest
+	//std::cout << "DV ( rxy, z, ntracks, mass) " << dv.rxy << " " << dv.z << " " << dv.m << " " << dv.nTracks << std::endl;
+	std::vector<Track> matched_tracks;
+	TLorentzVector dv_p4;
+	for (auto trk: tracks)
+	{
+		if (trk.DVIndex == dv.index) {
+			//std::cout << " trk (d0, eta, phi) " << trk.d0 << " " << trk.eta << " " << trk.phi << std::endl;
+			dv_p4+=trk.p4_wrtDV;
+			matched_tracks.push_back(trk);
 		}
-
 	}
 
-	return linked_mu;
-	
+	// double check we get the correct tracks
+	// compute mass of tracks and n-tracks
+	// it does! 
+	//std::cout << " Matched Ntrk " << matched_tracks.size() << std::endl;
+	//std::cout << " Matched Mass " << dv_p4.M() << std::endl;
+
+	return matched_tracks;
 }
+
 
 
 int doHistos::getNcharge(float pt, float eta, float phi, float m, float dR)
 {
+	// get number of charged particles inside a given jet 
 	int nCh = 0;
 	TLorentzVector j4; 
 	j4.SetPtEtaPhiM(pt, eta, phi, m);
@@ -581,6 +506,22 @@ void doHistos::Loop(std::string s_sample)
    			track.z0			 = 		 track_z0				->at(trk);
    			track.z0WrtDV		 = 		 track_z0WrtDV			->at(trk);
 
+   			track.isAssociated   	 = track_isAssociated->at(trk);
+
+   			track.NPixDeadSens		 = track_NPixDeadSens->at(trk);  
+   			track.NPixHits			 = track_NPixHits->at(trk);  
+   			track.NPixHoles			 = track_NPixHoles->at(trk);  
+   			track.NPixSharedHits	 = track_NPixSharedHits->at(trk);  
+   			track.NSctDeadSens		 = track_NSctDeadSens->at(trk);  
+   			track.NSctHits			 = track_NSctHits->at(trk);  
+   			track.NSctHoles			 = track_NSctHoles->at(trk);  
+   			track.NSctSharedHits	 = track_NSctSharedHits->at(trk);  
+   			track.NTrtHits			 = track_NTrtHits->at(trk);  
+   			track.NTrtOutliers		 = track_NTrtOutliers->at(trk);  
+   			track.truthMatchProb	 = track_truthMatchProb->at(trk);  
+   			track.truthOrigin		 = track_truthOrigin->at(trk);  
+   			track.truthType			 = track_truthType->at(trk);  
+
    			TLorentzVector four_vector; 
    			TLorentzVector four_vector_wrtDV; 
    			four_vector.SetPtEtaPhiM(track.pt, track.eta, track.phi, m_pion);
@@ -589,6 +530,7 @@ void doHistos::Loop(std::string s_sample)
    			track.p4 	   = four_vector;
    			track.p4_wrtDV = four_vector_wrtDV;
 
+   			track.weight = evt_wght;
    			tracks.push_back(track);
 
 		}
@@ -695,9 +637,15 @@ void doHistos::Loop(std::string s_sample)
   			dv.passNtrackCut5     = (dv.nTracks > 4 					 ) ? true : false; 
   			//dv.passMuonLink       = (i_matched_mu > -1 ||i_linked_mu > -1) ? true : false; // take a matched or linked muon
 
+  			// TESTING 
+			// GETTING TRACKS ASSOCIATED TO DVS
+			dv.tracks = getTracksAssociatedtoDV(dv,tracks);
 
 			dv.weight  = evt_wght;
 			displacedVertices.push_back(dv);
+
+
+			
 
 			////////////////////////////////////////////////////////////////
 			// 						 BLINDING! 							  //
@@ -729,6 +677,7 @@ void doHistos::Loop(std::string s_sample)
 			if (isRhad)
 			{
 				TruthVertex truthVertex;
+				truthVertex.index 		= vtx; // just saving this for now :/
   				truthVertex.pdgId  		= truthSparticle_PdgId->at(vtx); 
   				truthVertex.status 		= truthSparticle_Status->at(vtx); 
 	

@@ -564,9 +564,9 @@ public :
    virtual float    getStopMass();
    //virtual float    getStopDisplacement();
    //virtual float    getStopDisplacementRxy();
-   virtual float    recomputeDVmass(std::string s_sample, DV dv,  Muon mu);
-   virtual int      isMuonDVLink(DV dv,  Muon mu);
-   virtual int      getMuonDVLink(std::string s_sample, DV dv, std::vector<Muon> mus, float evt_wght);
+  // virtual float    recomputeDVmass(std::string s_sample, DV dv,  Muon mu);
+   //virtual int      isMuonDVLink(DV dv,  Muon mu);
+   //virtual int      getMuonDVLink(std::string s_sample, DV dv, std::vector<Muon> mus, float evt_wght);
    //virtual int      getMuonDVMatch(std::string s_sample, DV dv, std::vector<Muon> mus, float evt_wght);
    //virtual void     metEfficiencyStudy(std::string s_sample, std::vector<Muon> muons, float evt_wght);
    //virtual void     metEfficiencyPlots(std::string s_sample, std::string selection, float mu_pt, float mu_eta, float new_met, float evt_wght);

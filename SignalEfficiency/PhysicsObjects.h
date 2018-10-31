@@ -117,40 +117,6 @@ struct Jet {
    float nch_02;
    float nch_04;
 };
-struct DV {
-  unsigned int index;
-  TLorentzVector p4; 
-  float lastCut;
-  float chi2   ;
-  float m      ;
-  float nLRT   ;
-  float nTracks;
-  float r      ;
-  float rxy    ;
-  float x      ;
-  float y      ;
-  float z      ;
-  float phi    
-  ;
-  float weight ;
-
-  // CAREFUL NOT CONSECUTIVE
-  bool passFiducialCuts;
-  bool passChisqCut;   
-  bool passDistCut;    
-  bool passMaterialVeto;
-  bool passMassCut;       
-  bool passMassCut5;       
-  bool passMassCut10;       
-  bool passNtrackCut; 
-  bool passNtrackCut3; 
-  bool passNtrackCut4; 
-  bool passNtrackCut5; 
-  bool passMuonLink;  
-
-  int truth_match;
-  ;    
-};
 struct Track {
    unsigned int index;
    TLorentzVector p4; 
@@ -173,7 +139,60 @@ struct Track {
    float ptWrtDV;
    float z0;
    float z0WrtDV;
+   int isAssociated;
+
+   int NPixDeadSens;  
+   int NPixHits;  
+   int NPixHoles;  
+   int NPixSharedHits;  
+   int NSctDeadSens;  
+   int NSctHits;  
+   int NSctHoles;  
+   int NSctSharedHits;  
+   int NTrtHits;  
+   int NTrtOutliers;  
+
+   float truthMatchProb; 
+   float truthOrigin; 
+   float truthType; 
+
+   float weight;
 };
+struct DV {
+  unsigned int index;
+  TLorentzVector p4; 
+  float lastCut;
+  float chi2   ;
+  float m      ;
+  float nLRT   ;
+  float nTracks;
+  float r      ;
+  float rxy    ;
+  float x      ;
+  float y      ;
+  float z      ;
+  float phi    ;
+  std::vector<Track> tracks;
+  float weight ;
+
+  // CAREFUL NOT CONSECUTIVE
+  bool passFiducialCuts;
+  bool passChisqCut;   
+  bool passDistCut;    
+  bool passMaterialVeto;
+  bool passMassCut;       
+  bool passMassCut5;       
+  bool passMassCut10;       
+  bool passNtrackCut; 
+  bool passNtrackCut3; 
+  bool passNtrackCut4; 
+  bool passNtrackCut5; 
+  bool passMuonLink;  
+
+  int truth_match;
+  ;    
+};
+
 
 struct IDTrack{
    unsigned int index;
