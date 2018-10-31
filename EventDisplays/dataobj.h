@@ -12,7 +12,9 @@
 #include <TLorentzVector.h>
 #include <TROOT.h>
 
-
+//============================
+// E N U M   D E T   T Y P E
+//============================
 enum DetectorType {
     
     pixelBarrel0 = 0, //!< there are three or four pixel barrel layers (R1/R2)
@@ -50,12 +52,21 @@ enum DetectorType {
  
   };
 
+//============================
+// H A S   H I T
+//============================
 inline bool hasHit( const uint32_t& pattern, enum DetectorType layer ) { return ( pattern & ( 1<<layer ) ); }
 
 
-class dataobj {
+//============================
+// D A T A  O B J
+//============================
+class DataObj {
 public:
-  
+ 
+  //&&&&&&&&&&&&&&&&&
+  // Member vars
+  //&&&&&&&&&&&&&&&&&
   std::string name;
   std::string tree_name;
   
@@ -195,11 +206,13 @@ public:
   TBranch* b_truth_vtx_trk_pt;
   TBranch* b_truth_vtx_trk_eta;
   TBranch* b_truth_vtx_trk_phi;
-  
+ 
+  //&&&&&&&&&&&&&&&&&&&&&&&&&&
+  // E N U M   k - S H O R T
+  //&&&&&&&&&&&&&&&&&&&&&&&&&&
   std::map<int, int> eventmap;
   
   enum mode { kInclusive, kKshort, kFakeReject, kFakeRejectKshort, kInnerBeamPipe, kN3, kN3outer };
-  
   unsigned mode;
   
   dataobj( std::string filename, std::string treename, std::string n ) : name( n ),
